@@ -1,0 +1,17 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/KashDAO/protocol-sdk-python/blob/main/SECURITY.md
+    about: Please report security issues privately. See SECURITY.md for the disclosure flow.
+  - name: Question or general discussion
+    url: https://github.com/KashDAO/protocol-sdk-python/discussions
+    about: For "how do I..." questions and design discussions, please use Discussions.
+  - name: TypeScript protocol SDK
+    url: https://github.com/KashDAO/protocol-sdk-typescript/issues/new/choose
+    about: If your issue is on the TypeScript side (the canonical implementation this Python SDK mirrors), file there.
+  - name: Hummingbot integration
+    url: https://github.com/KashDAO/protocol-sdk-python/blob/main/HUMMINGBOT_INTEGRATION.md
+    about: For Hummingbot strategy questions, see HUMMINGBOT_INTEGRATION.md first; if it doesn't answer your question, open a Discussion.
+  - name: Kash platform / API issues
+    url: https://app.kash.bot
+    about: Server-side bugs (REST API, account issues) — please use the in-app support channel, not the protocol SDK repo.

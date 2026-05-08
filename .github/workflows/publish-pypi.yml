@@ -1,0 +1,72 @@
+name: Publish to PyPI
+
+# Triggered on tag push (v*) at the public mirror
+# (KashDAO/protocol-sdk-python). Builds the wheel + sdist and uploads
+# to PyPI via OIDC trusted publishing — no PyPI API token in the repo.
+#
+# This workflow ships INSIDE the mirrored package (see
+# `scripts/sync-to-public-mirror.ts`'s COPY_ENTRIES) so that pushing
+# a tag automatically uploads.
+#
+# Setup (one-time on the public mirror):
+#   1. Create a "trusted publisher" on PyPI for the project, scoped to
+#      `KashDAO/protocol-sdk-python` + this workflow filename.
+#   2. No API token needed — the OIDC token issued by GitHub Actions
+#      is exchanged for a short-lived PyPI upload credential.
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-and-publish:
+    name: Build + publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: pypi
+      url: https://pypi.org/p/kashdao-protocol-sdk
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+
+      - name: Set up Python
+        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b  # v5.3.0
+        with:
+          python-version: '3.12'
+
+      - name: Install build deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install build
+
+      - name: Build wheel + sdist
+        run: python -m build
+
+      - name: Verify version matches tag
+        run: |
+          # Extract the version from the built wheel filename — robust
+          # against single-line vs heredoc shell quoting, and uses the
+          # exact value hatchling baked into the artifact.
+          tag="${GITHUB_REF#refs/tags/v}"
+          wheel=$(find dist -maxdepth 1 -name '*.whl' -print -quit)
+          # kashdao_protocol_sdk-0.1.0b1-py3-none-any.whl → 0.1.0b1
+          pkg=$(basename "$wheel" | awk -F- '{print $2}')
+          if [ "$tag" != "$pkg" ]; then
+            echo "Tag v$tag does not match wheel version ($pkg)"
+            exit 1
+          fi
+          echo "Version match: $pkg"
+
+      - name: Publish to PyPI (OIDC trusted publishing)
+        uses: pypa/gh-action-pypi-publish@76f52bc884231f62b9a034ebfe128415bbaabdfc  # v1.12.4
+        with:
+          packages-dir: dist/
+          # Skip-existing covers reruns of an already-published tag.
+          skip-existing: true

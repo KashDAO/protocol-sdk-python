@@ -1,0 +1,111 @@
+name: Bug report
+description: Something is wrong with `kashdao-protocol-sdk` (Python)
+labels: [bug, triage]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: SDK version
+      description: Output of `pip show kashdao-protocol-sdk` or the value pinned in your `pyproject.toml`.
+      placeholder: 0.1.0b1
+    validations:
+      required: true
+
+  - type: dropdown
+    id: python
+    attributes:
+      label: Python version
+      options:
+        - "3.10"
+        - "3.11"
+        - "3.12"
+        - "3.13"
+        - Other (please describe in reproduction)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Which mode?
+      options:
+        - EOA (vanilla EIP-1559)
+        - Smart account (ERC-4337 v0.7)
+        - Both / unsure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: chain
+    attributes:
+      label: Chain
+      options:
+        - Base mainnet (8453)
+        - Base Sepolia (84532)
+        - Local Anvil / fork
+        - Custom chain (via `custom_chain=...`)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: integration
+    attributes:
+      label: Integration context
+      options:
+        - Hummingbot strategy
+        - Standalone Python script
+        - Jupyter notebook
+        - Backend service
+        - Other (please describe)
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: |
+        A clear description of the bug. **Include the error code and any
+        `requestId`** from the exception's `context` if you have them —
+        they let us pull provider logs in seconds.
+      placeholder: |
+        I called `await client.trades.send.buy(...)` and got
+        `KashSimulationRevertedError(code=SLIPPAGE_EXCEEDED)`.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: |
+        Smallest piece of code that demonstrates the bug. Redact private
+        keys, RPC URLs with embedded API keys, and bundler API keys —
+        never paste secrets here.
+      render: python
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment details
+      description: |
+        OS, RPC provider (Alchemy / Infura / public node / etc.), bundler
+        provider for SA mode (Pimlico / Alchemy / Flashbots / generic),
+        any proxy in front. Do NOT paste keys.
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Final checks
+      options:
+        - label: I searched existing issues and didn't find a duplicate.
+          required: true
+        - label: This isn't a security vulnerability — those should go to security@kash.bot per [SECURITY.md](../../SECURITY.md).
+          required: true
+        - label: I have not pasted any private keys, RPC API keys, or bundler API keys in this report.
+          required: true

@@ -1,0 +1,41 @@
+# Build artifacts
+build/
+dist/
+*.egg-info/
+*.egg
+__pycache__/
+*.py[cod]
+*$py.class
+.eggs/
+
+# Environments
+# Python virtualenvs — match plain `.venv/`, suffixed variants
+# (`.venv-py312/`, `.venv-py313/` from `python -m venv .venv-pyXYZ`),
+# and the sibling `venv/` / `env/` conventions some tools use.
+.venv/
+.venv-*/
+venv/
+venv-*/
+env/
+.env
+.env.*
+
+# Tests / coverage
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

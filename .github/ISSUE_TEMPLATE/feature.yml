@@ -1,0 +1,52 @@
+name: Feature request
+description: Propose a new method, config option, or capability
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you trying to solve?
+      description: Start with the use case, not the API. We pick the API.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed API (optional)
+      description: |
+        If you have an API shape in mind, sketch it. If not, describe the
+        outcome and we'll design.
+      render: python
+
+  - type: dropdown
+    id: parity
+    attributes:
+      label: Cross-language parity
+      description: |
+        The Python SDK mirrors the TypeScript `@kashdao/protocol-sdk`. New
+        public surface should typically land in TS first; flag if your
+        request applies to both or only Python.
+      options:
+        - Both Python and TypeScript (will need cross-language design)
+        - Python-only (Hummingbot / Python-ecosystem feature)
+        - Backports a feature already in TS
+        - Not sure — happy to discuss
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you've considered
+      description: Workarounds you've tried, similar features in other Web3 SDKs (web3.py / eth-account / ape), etc.
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Final checks
+      options:
+        - label: I searched existing issues and didn't find a duplicate.
+          required: true
+        - label: This is in scope for the protocol SDK (on-chain trading flows, signer adapters, bundler integrations) — not a feature request for the Kash backend or REST API.
+          required: true
