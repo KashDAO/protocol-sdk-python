@@ -1,15 +1,13 @@
+# `kashdao-protocol-sdk` (Python)
+
+Official Python SDK for the [Kash](https://kash.bot) prediction-market protocol — the canonical Hummingbot integration path and a first-class option for any Python trading bot, AI agent, or partner integration.
+
 [![PyPI version](https://img.shields.io/pypi/v/kashdao-protocol-sdk?include_prereleases)](https://pypi.org/project/kashdao-protocol-sdk/)
 [![Python versions](https://img.shields.io/pypi/pyversions/kashdao-protocol-sdk)](https://pypi.org/project/kashdao-protocol-sdk/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![CI](https://github.com/KashDAO/protocol-sdk-python/actions/workflows/ci.yml/badge.svg)](https://github.com/KashDAO/protocol-sdk-python/actions/workflows/ci.yml)
 [![mypy: strict](https://img.shields.io/badge/mypy-strict-blue.svg)](https://mypy.readthedocs.io/)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-
-# `kashdao-protocol-sdk` (Python)
-
-Python SDK for the [Kash](https://kash.bot) prediction-market protocol —
-the canonical Hummingbot integration path and a first-class option for
-any Python trading bot, AI agent, or partner integration.
 
 > **Status: 0.1.0b1 (beta).** Both modes ship complete:
 >
@@ -52,7 +50,7 @@ pip install kashdao-protocol-sdk
 Requires Python ≥ 3.10. End-user installs touch only the public PyPI
 registry — no private repos, no auth tokens.
 
-## Quick start (EOA mode — canonical Hummingbot path)
+## Quickstart (EOA mode — canonical Hummingbot path)
 
 ```python
 import asyncio
@@ -113,7 +111,7 @@ For Hummingbot users: see
 [`HUMMINGBOT_INTEGRATION.md`](./HUMMINGBOT_INTEGRATION.md) for the full
 strategy-author guide.
 
-## Quick start — smart-account mode
+## Quickstart — smart-account mode
 
 For consumers on AA stacks (Privy, Coinbase Smart Wallet, Pimlico,
 Alchemy AA), or who want gasless onboarding via paymaster:
