@@ -1,5 +1,38 @@
 # Security policy
 
+## Non-custodial design
+
+`kashdao-protocol-sdk` is **non-custodial software** by construction.
+It is also **zero-Kash-dependency software**: nothing on the trade path
+reaches a Kash-operated server.
+
+- **Kash never holds or controls user funds.** USDC, outcome tokens,
+  and any other on-chain assets sit at addresses the customer
+  controls. Kash holds zero balances on the customer's behalf at any
+  time.
+- **Kash never has access to user signing keys.** This SDK accepts a
+  consumer-supplied signer (the `EoaSigner` Protocol or the SA-mode
+  equivalent). Keys live wherever the consumer decides — a local
+  `eth_account.Account`, a remote HSM (AWS-KMS, GCP-KMS), Fireblocks,
+  web3signer over RPC, Privy MPC, a hardware wallet — and never
+  transit any Kash-controlled boundary.
+- **Kash is not on the trade path at all.** This SDK runs entirely on
+  the consumer's infrastructure (consumer's RPC, consumer's signer,
+  consumer's bundler). The Kash backend is never contacted; Kash
+  cannot inspect, block, censor, delay, or replay trades made through
+  this SDK.
+- **Kash never moves user funds.** Settlement is on-chain via
+  open-source protocol contracts. Positions are tokenized ERC-1155
+  outcome tokens held directly by the user's account; there is no
+  Kash-controlled pool, ledger, or relay in the path.
+- **Kash is not a money-services business, custodian, exchange, or
+  broker-dealer.** Kash publishes software and protocol contracts;
+  customers run the software and interact with the protocol from
+  accounts they control.
+
+Equivalent statements hold for `@kashdao/sdk`, `@kashdao/protocol-sdk`,
+and `@kashdao/cli`.
+
 ## Reporting a vulnerability
 
 **Please do not file a public GitHub issue for security vulnerabilities.**
