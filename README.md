@@ -239,8 +239,11 @@ A full worked example lives in
 ## What this SDK deliberately does NOT do
 
 - **Kash-orchestrated trade routing.** No Kash backend on the trade path. Use
-  `@kashdao/sdk` (the REST client) if you want hosted, API-key-authed
-  trades.
+  [`@kashdao/sdk`](https://www.npmjs.com/package/@kashdao/sdk) (the REST
+  client) if you want API-key-authed trades where the Kash backend
+  builds and submits the UserOp against your Privy-managed smart
+  account. (That path is also non-custodial — Kash never holds keys
+  there either.)
 - **Sponsor or bundle UserOps.** Bring your own bundler URL.
 - **Hold or generate keys.** Bring your own signer (eth_account, KMS,
   Fireblocks, hardware wallet).
