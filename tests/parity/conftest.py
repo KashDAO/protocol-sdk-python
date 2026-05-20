@@ -2,9 +2,10 @@
 
 Loads byte-equality fixtures generated from the TypeScript SDK and
 hands them to the parity tests. The fixture file is produced by a
-generator script in the TS package
-(target path: ``packages/protocol-sdk/scripts/generate-parity-fixtures.ts``)
-that is mirror-published alongside this Python SDK.
+generator script in the ``@kashdao/protocol-sdk`` TypeScript package
+(https://github.com/KashDAO/protocol-sdk-typescript) and committed
+alongside this Python SDK so the parity tests are reproducible without
+a Node toolchain.
 
 Until the generator lands the fixture file does not exist and the
 parity tests skip cleanly. See ``tests/parity/README.md`` for the

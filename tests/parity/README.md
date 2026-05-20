@@ -8,8 +8,8 @@ surface as a chain-side revert at the worst possible moment.
 
 ## How it works
 
-A generator script in the TypeScript package (target path:
-`packages/protocol-sdk/scripts/generate-parity-fixtures.ts`) writes a
+A generator script in the [`@kashdao/protocol-sdk` TypeScript
+package](https://github.com/KashDAO/protocol-sdk-typescript) writes a
 shared fixture file at:
 
 ```
