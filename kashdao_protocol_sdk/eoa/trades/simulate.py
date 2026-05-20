@@ -22,6 +22,7 @@ from kashdao_protocol_sdk.shared.contracts.decoders import (
     decode_market_revert,
 )
 from kashdao_protocol_sdk.shared.types import (
+    Hex,
     SimulationDecodedError,
     SimulationFailure,
     SimulationResult,
@@ -32,8 +33,22 @@ from kashdao_protocol_sdk.shared.types import (
 async def simulate_transaction(
     web3: AsyncWeb3,
     transaction: UnsignedTransaction,
+    owner_address: Hex | None = None,
 ) -> SimulationResult:
-    """Pre-flight ``eth_call`` against the destination contract."""
+    """Pre-flight ``eth_call`` against the destination contract.
+
+    ``owner_address`` is bound to the call's ``from`` field so that
+    ``msg.sender``-dependent paths simulate correctly. Notably,
+    ``Market.buyExactAssetsIn`` (and friends) call
+    ``USDC.transferFrom(msg.sender, ...)`` — without ``from`` web3
+    defaults to the zero address and the simulation reverts with
+    ``ERC20InsufficientAllowance(spender=market, allowance=0, ...)``.
+    Callers always have the EOA owner-address available; passing it
+    here is mandatory for any tx that touches USDC + the EOA.
+    Optional ``None`` is allowed for backwards compatibility with
+    callers that don't have an owner address (e.g. read-only sim of a
+    fully-prepared raw tx); they accept the zero-address default.
+    """
     if not transaction.to:
         return SimulationFailure(
             revert_reason="transaction has no `to` field",
@@ -45,6 +60,8 @@ async def simulate_transaction(
             "data": cast(HexStr, transaction.data or "0x"),
             "value": Wei(transaction.value or 0),
         }
+        if owner_address is not None:
+            call_params["from"] = AsyncWeb3.to_checksum_address(owner_address)
         await web3.eth.call(call_params)
         return SimulationSuccess()
     except (ContractCustomError, ContractLogicError) as err:

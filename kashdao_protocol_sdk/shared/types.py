@@ -21,7 +21,7 @@ from __future__ import annotations
 
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import AliasChoices, BaseModel, ConfigDict, Field
 
 # ---------------------------------------------------------------------------
 # Aliases
@@ -50,12 +50,29 @@ QuoteSide = Literal["BUY", "SELL"]
 # that pays USDC and receives outcome tokens".
 
 
+#: Field alias accepting both the TS-parity name ``account`` and the
+#: legacy ``smart_account`` name. The canonical attribute is
+#: ``account`` (mode-polymorphic: the EOA in EOA mode, the SA in SA
+#: mode). The legacy ``smart_account=`` keyword on the constructor
+#: remains accepted via Pydantic ``AliasChoices`` so existing
+#: customer code keeps working through this deprecation window.
+_ACCOUNT_ALIAS = AliasChoices("account", "smart_account")
+
+
 class BuildBuyParams(BaseModel):
-    """Parameters for a BUY trade build."""
+    """Parameters for a BUY trade build.
 
-    model_config = ConfigDict(frozen=True, extra="forbid")
+    .. note::
+       The ``account`` field accepts the legacy ``smart_account=``
+       keyword as well, matching the original Python-only name. New
+       code should pass ``account=`` to match the TS SDK
+       (``BuildBuyParams.account`` there). The legacy name is
+       slated for removal in a future minor.
+    """
 
-    smart_account: Hex
+    model_config = ConfigDict(frozen=True, extra="forbid", populate_by_name=True)
+
+    account: Hex = Field(validation_alias=_ACCOUNT_ALIAS)
     outcome: int
     amount_usdc: int
     max_slippage_bps: int
@@ -63,11 +80,14 @@ class BuildBuyParams(BaseModel):
 
 
 class BuildSellParams(BaseModel):
-    """Parameters for a SELL trade build."""
+    """Parameters for a SELL trade build.
 
-    model_config = ConfigDict(frozen=True, extra="forbid")
+    See :class:`BuildBuyParams` for the ``account`` field aliasing note.
+    """
 
-    smart_account: Hex
+    model_config = ConfigDict(frozen=True, extra="forbid", populate_by_name=True)
+
+    account: Hex = Field(validation_alias=_ACCOUNT_ALIAS)
     outcome: int
     amount_tokens: int
     max_slippage_bps: int
@@ -75,11 +95,14 @@ class BuildSellParams(BaseModel):
 
 
 class BuildClosePositionParams(BaseModel):
-    """Parameters for a close-position trade build (SELLs full balance)."""
+    """Parameters for a close-position trade build (SELLs full balance).
 
-    model_config = ConfigDict(frozen=True, extra="forbid")
+    See :class:`BuildBuyParams` for the ``account`` field aliasing note.
+    """
 
-    smart_account: Hex
+    model_config = ConfigDict(frozen=True, extra="forbid", populate_by_name=True)
+
+    account: Hex = Field(validation_alias=_ACCOUNT_ALIAS)
     outcome: int
     max_slippage_bps: int
     deadline: int | None = None
@@ -129,6 +152,29 @@ class MarketOutcomeState(BaseModel):
     probability: float
 
 
+class MarketIdentity(BaseModel):
+    """On-chain identity + lifecycle fields surfaced by :class:`MarketState`.
+
+    Lets UIs show "Market #12345" and "resolves in 5h" without needing
+    the off-chain @kashdao/sdk metadata layer. Mirrors the TS SDK's
+    ``MarketState.identity`` sub-object byte-for-byte.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    #: uint256 market id assigned by the factory at creation.
+    market_id: int
+    #: uint256 category bucket id (set at creation; UI grouping).
+    category_id: int
+    #: Unix-seconds timestamp of market creation.
+    created_at: int
+    #: Unix-seconds timestamp at which trading freezes. ``0`` means no
+    #: scheduled freeze (resolution-time only).
+    freeze_time: int
+    #: Unix-seconds timestamp at which the oracle resolves the market.
+    resolve_time: int
+
+
 class MarketState(BaseModel):
     """Aggregated on-chain market state."""
 
@@ -139,6 +185,8 @@ class MarketState(BaseModel):
     reserve_wad: int
     status: MarketStatus
     read_at: int
+    #: On-chain identity + lifecycle (market_id, category_id, timestamps).
+    identity: MarketIdentity
 
 
 class MinimalMarketRead(BaseModel):

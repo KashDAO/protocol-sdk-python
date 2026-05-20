@@ -42,6 +42,7 @@ from eth_account import Account
 
 from kashdao_protocol_sdk import (
     CustomChain,
+    CustomChainAddresses,
     create_eoa_client,
     viem_account_eoa_signer,
 )
@@ -69,15 +70,14 @@ async def main() -> None:
     custom_chain = CustomChain(
         chain_id=chain_id,
         name="anvil-local",
-        rpc_url=rpc,
-        addresses={
-            "factory": factory,
-            "usdc": usdc_addr,
-            "param_registry": param_registry,
-            "oracle": oracle,
-            # Vault / multicall3 are optional — leave empty unless your
+        addresses=CustomChainAddresses(
+            factory=factory,
+            usdc=usdc_addr,
+            param_registry=param_registry,
+            oracle=oracle,
+            # Vault / tokens1155 are optional — leave unset unless your
             # local deploy includes them.
-        },
+        ),
     )
 
     async with create_eoa_client(

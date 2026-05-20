@@ -63,11 +63,12 @@ async def main(amount_usdc: int, *, confirm: bool) -> None:
         receipt = await client.trades.send.buy(
             market,
             BuildBuyParams(
-                # In EOA mode the "trader" is the EOA itself — but the
-                # shared param shape uses `smart_account` as the field
-                # name to keep ONE type for both modes. Pass your EOA
-                # address here.
-                smart_account=client.signer.owner_address,
+                # In EOA mode `account` is the EOA itself; in SA mode
+                # it's the SimpleAccount address. The mode-polymorphic
+                # field name matches the TS SDK. Pass your EOA address
+                # here. (The legacy ``smart_account=`` keyword still
+                # works through Pydantic AliasChoices but is deprecated.)
+                account=client.signer.owner_address,
                 outcome=0,
                 amount_usdc=usdc(amount_usdc),
                 max_slippage_bps=50,  # 0.5%

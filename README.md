@@ -1,3 +1,10 @@
+[![PyPI version](https://img.shields.io/pypi/v/kashdao-protocol-sdk?include_prereleases)](https://pypi.org/project/kashdao-protocol-sdk/)
+[![Python versions](https://img.shields.io/pypi/pyversions/kashdao-protocol-sdk)](https://pypi.org/project/kashdao-protocol-sdk/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![CI](https://github.com/KashDAO/protocol-sdk-python/actions/workflows/ci.yml/badge.svg)](https://github.com/KashDAO/protocol-sdk-python/actions/workflows/ci.yml)
+[![mypy: strict](https://img.shields.io/badge/mypy-strict-blue.svg)](https://mypy.readthedocs.io/)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+
 # `kashdao-protocol-sdk` (Python)
 
 Python SDK for the [Kash](https://kash.bot) prediction-market protocol —
@@ -233,7 +240,7 @@ A full worked example lives in
 
 ## What this SDK deliberately does NOT do
 
-- **Custodial trade routing.** No Kash backend on the trade path. Use
+- **Kash-orchestrated trade routing.** No Kash backend on the trade path. Use
   `@kashdao/sdk` (the REST client) if you want hosted, API-key-authed
   trades.
 - **Sponsor or bundle UserOps.** Bring your own bundler URL.

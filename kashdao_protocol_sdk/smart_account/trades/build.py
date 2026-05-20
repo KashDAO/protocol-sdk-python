@@ -175,13 +175,13 @@ async def build_buy_user_op(
             params.amount_usdc,
             min_out,
             deadline,
-            params.smart_account,
+            params.account,
         ],
     )
     return await _assemble_user_op(
         web3,
         addresses,
-        smart_account=params.smart_account,
+        smart_account=params.account,
         target=market_address,
         inner_calldata=inner,
         options=opts,
@@ -214,13 +214,13 @@ async def build_sell_user_op(
             params.amount_tokens,
             min_out,
             deadline,
-            params.smart_account,
+            params.account,
         ],
     )
     return await _assemble_user_op(
         web3,
         addresses,
-        smart_account=params.smart_account,
+        smart_account=params.account,
         target=market_address,
         inner_calldata=inner,
         options=opts,
@@ -268,17 +268,17 @@ async def build_close_position_user_op(
     Shorthand for :func:`build_sell_user_op` with ``amount_tokens``
     resolved from the on-chain ERC-1155 balance.
     """
-    position = await get_position(web3, addresses, params.smart_account, market_address)
+    position = await get_position(web3, addresses, params.account, market_address)
     holding = next((h for h in position.holdings if h.outcome_index == params.outcome), None)
     balance = holding.balance_wad if holding is not None else 0
     if balance == 0:
         raise KashConfigError(
-            f"account {params.smart_account} has no balance for outcome {params.outcome}",
+            f"account {params.account} has no balance for outcome {params.outcome}",
             code=ErrorCode.CLOSE_POSITION_ZERO_BALANCE,
             context={
                 "market_address": market_address,
                 "outcome": params.outcome,
-                "account": params.smart_account,
+                "account": params.account,
             },
         )
     return await build_sell_user_op(
@@ -286,7 +286,7 @@ async def build_close_position_user_op(
         addresses,
         market_address,
         BuildSellParams(
-            smart_account=params.smart_account,
+            smart_account=params.account,
             outcome=params.outcome,
             amount_tokens=balance,
             max_slippage_bps=params.max_slippage_bps,

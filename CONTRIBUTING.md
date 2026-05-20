@@ -67,7 +67,7 @@ Requires Python 3.10+.
 - **Internal `@kashdao/*` runtime imports.** The Python SDK ships with
   zero internal dependencies. ABIs are vendored as JSON; the drift gate
   catches divergence from the TypeScript canonical source.
-- **Custodial / API-key trade flows.** Those live in the `kashdao-sdk`
+- **Kash-orchestrated / API-key trade flows.** Those live in the `kashdao-sdk`
   package. This package is non-custodial only.
 - **Telemetry.** No phone-home, no usage analytics, no error reporting
   back to Kash. Ever.
@@ -92,7 +92,13 @@ Requires Python 3.10+.
   experience is part of the SDK.
 - **Tests cover both happy path AND error paths.** Mock the boundary
   (`pytest-httpx`, an in-process JSON-RPC fake, etc.); never mock the
-  SDK's own internals.
+  SDK's own internals. The suite is split into three layers, each
+  gated by a pytest marker: **unit** (default, runs offline,
+  network-mocked), **integration** (gated by `@pytest.mark.integration`,
+  requires `KASH_BASE_SEPOLIA_RPC` + `KASH_TEST_OWNER_KEY`, hits real
+  Base Sepolia, skips cleanly without env vars), and **parity**
+  (gated by `@pytest.mark.parity`, byte-equality against TS-generated
+  fixtures, skips cleanly until the fixture file is vendored).
 - **HTTPS-only.** RPC URLs must start with `https://`, `wss://`, or
   `ws://`. `http://localhost` (and `http://127.0.0.1`) is the only
   exception (for dev work).

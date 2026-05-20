@@ -2,16 +2,15 @@
 
 Runnable Python scripts that demonstrate the SDK end-to-end. Each
 example is self-contained: clone the repo, install the SDK, populate
-the config (RPC URL, signer key, etc.), and run.
+the environment variables documented in the script's leading docstring,
+and run.
 
 ## Layout
 
 | Subdir           | Audience                                                                          |
 | ---------------- | --------------------------------------------------------------------------------- |
 | `eoa/`           | Vanilla EOA mode (Hummingbot, ad-hoc bots, anyone with their own EIP-1559 signer) |
-| `smart-account/` | ERC-4337 v0.7 mode (Privy, Coinbase Smart Wallet, AA stacks)                      |
-| `hummingbot/`    | Reference Hummingbot strategies that import the SDK                               |
-| `local-anvil/`   | End-to-end against a local Anvil + dev-stack deploy                               |
+| `smart_account/` | ERC-4337 v0.7 mode (Privy, Coinbase Smart Wallet, AA stacks)                      |
 
 Each example carries a leading module docstring with its required
 env vars + setup steps. See `HUMMINGBOT_INTEGRATION.md` for the
@@ -30,15 +29,22 @@ canonical Hummingbot strategy walk-through;
 
 ## Running
 
-Each example sets out its required env vars in a leading docstring.
-Common pattern:
+Each script reads its config from environment variables and is
+read-only by default. The `--confirm` flag is the universal opt-in: any
+example that submits a transaction on-chain is gated behind `--confirm`,
+so you can dry-run without surprises.
 
 ```sh
 pip install kashdao-protocol-sdk
 KASH_RPC_URL=https://sepolia.base.org \
 KASH_PRIVATE_KEY=0x... \
-python examples/eoa/quote_and_buy.py
+KASH_MARKET_ADDRESS=0x... \
+python examples/eoa/quote_and_buy.py            # read-only quote
+python examples/eoa/quote_and_buy.py --confirm  # submits a BUY
 ```
+
+The required env vars are listed in each script's module docstring and
+in the subdirectory's `README.md`.
 
 ## Contributing examples
 
@@ -47,9 +53,9 @@ A good example is:
 - **Self-contained.** No imports from sibling examples; copy-pasteable.
 - **Documented.** A leading module docstring explains what it does and
   what env vars it needs.
-- **Idempotent or annotated.** If it places an on-chain trade, say so
-  loudly at the top and gate the action behind an explicit `--confirm`
-  flag.
+- **Idempotent or annotated.** If it places an on-chain trade, gate
+  the action behind an explicit `--confirm` flag and say so loudly at
+  the top.
 - **Free of secrets.** Only reads from env or CLI args.
 
 Open a PR with the example + a one-line entry in this README.

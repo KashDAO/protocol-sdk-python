@@ -160,11 +160,11 @@ class KashAmmArbStrategy(ScriptStrategyBase):  # type: ignore[misc, valid-type]
                 receipt = await self._kash.trades.send.buy(
                     self._kash_market,
                     BuildBuyParams(
-                        # The buy/sell/close param shape uses
-                        # `smart_account` as the field name in both
-                        # modes; in EOA mode this is the EOA address
-                        # itself (the trader IS the signer).
-                        smart_account=self._owner,
+                        # `account` is the mode-polymorphic field
+                        # (TS parity). In EOA mode this is the EOA
+                        # address itself; in SA mode it's the
+                        # SimpleAccount address.
+                        account=self._owner,
                         outcome=self._outcome,
                         amount_usdc=usdc(_TRADE_NOTIONAL_USDC),
                         max_slippage_bps=_MAX_SLIPPAGE_BPS,

@@ -72,7 +72,7 @@ async def main(amount_usdc: int, *, confirm: bool) -> None:
         receipt = await client.trades.send.buy(
             market,
             BuildBuyParams(
-                smart_account=sa_address,
+                account=sa_address,
                 outcome=0,
                 amount_usdc=usdc(amount_usdc),
                 max_slippage_bps=50,  # 0.5%

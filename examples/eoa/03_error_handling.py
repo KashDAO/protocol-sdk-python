@@ -68,10 +68,10 @@ async def main() -> None:
             await client.trades.send.buy(
                 market,
                 BuildBuyParams(
-                    # `smart_account` is the shared param-shape field
-                    # name used in both EOA and SA modes. In EOA mode
-                    # pass the EOA address itself.
-                    smart_account=client.signer.owner_address,
+                    # `account` is the mode-polymorphic field name (TS
+                    # parity). In EOA mode pass the EOA address; in SA
+                    # mode pass the SimpleAccount address.
+                    account=client.signer.owner_address,
                     outcome=0,
                     amount_usdc=usdc(1000),
                     max_slippage_bps=0,  # impossibly tight

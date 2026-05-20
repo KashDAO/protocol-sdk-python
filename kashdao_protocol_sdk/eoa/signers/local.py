@@ -89,12 +89,20 @@ def viem_account_eoa_signer(account: LocalAccount) -> LocalEoaSigner:
 
 
 def _to_eth_account_dict(transaction: UnsignedTransaction) -> dict[str, object]:
-    """Convert :class:`UnsignedTransaction` to the dict shape ``Account.sign_transaction`` expects."""
+    """Convert :class:`UnsignedTransaction` to the dict shape ``Account.sign_transaction`` expects.
+
+    eth_account's typed-tx validator rejects lowercase hex addresses
+    (`Transaction had invalid fields: {'to': '0x...'}`) — it requires
+    a checksum-cased string or raw bytes. We checksum here so callers
+    can keep passing lowercase hex through the SDK boundary.
+    """
+    from eth_utils import to_checksum_address  # local import: hot path is signing, not module load
+
     return {
         "type": 2,
         "chainId": transaction.chain_id,
         "nonce": transaction.nonce,
-        "to": transaction.to,
+        "to": to_checksum_address(transaction.to),
         "value": transaction.value,
         "data": transaction.data,
         "gas": transaction.gas,

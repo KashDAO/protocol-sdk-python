@@ -154,7 +154,11 @@ async def _populate(
     transaction_hash = compute_transaction_hash(populated)
 
     if opts.simulate:
-        result = await simulate_transaction(web3, populated)
+        # Pass owner_address as the eth_call `from` so msg.sender-dependent
+        # paths (notably USDC.transferFrom inside Market.buy/sell) simulate
+        # against the correct sender. Without this they default to 0x0 and
+        # revert with ERC20InsufficientAllowance(spender=market, allowance=0).
+        result = await simulate_transaction(web3, populated, owner_address=owner_address)
         if not getattr(result, "will_succeed", False):
             reason = getattr(result, "revert_reason", "unknown")
             decoded = getattr(result, "decoded_error", None)

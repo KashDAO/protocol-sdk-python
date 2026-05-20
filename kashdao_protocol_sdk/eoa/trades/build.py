@@ -108,7 +108,7 @@ async def build_buy_transaction(
             params.amount_usdc,
             min_tokens_out_wad,
             deadline,
-            to_bytes(hexstr=params.smart_account),
+            to_bytes(hexstr=params.account),
         ],
     )
     calldata = HexBytes(_BUY_SELECTOR + encoded).to_0x_hex()
@@ -146,7 +146,7 @@ async def build_sell_transaction(
             params.amount_tokens,
             min_assets_out_usdc,
             deadline,
-            to_bytes(hexstr=params.smart_account),
+            to_bytes(hexstr=params.account),
         ],
     )
     calldata = HexBytes(_SELL_SELECTOR + encoded).to_0x_hex()
@@ -207,21 +207,21 @@ async def build_close_position_transaction(
     Shorthand for :func:`build_sell_transaction` with ``amount_tokens``
     resolved from the on-chain ERC-1155 balance.
     """
-    position = await get_position(web3, addresses, params.smart_account, market_address)
+    position = await get_position(web3, addresses, params.account, market_address)
     holding = position.by_outcome.get(params.outcome)
     balance = holding.balance_wad if holding is not None else 0
     if balance == 0:
         raise KashChainError(
-            f"EOA {params.smart_account} has no balance for outcome {params.outcome}",
+            f"EOA {params.account} has no balance for outcome {params.outcome}",
             code="CLOSE_POSITION_ZERO_BALANCE",
             context={
                 "market_address": market_address,
                 "outcome": params.outcome,
-                "account": params.smart_account,
+                "account": params.account,
             },
         )
     sell_kwargs: dict[str, Any] = {
-        "smart_account": params.smart_account,
+        "account": params.account,
         "outcome": params.outcome,
         "amount_tokens": balance,
         "max_slippage_bps": params.max_slippage_bps,

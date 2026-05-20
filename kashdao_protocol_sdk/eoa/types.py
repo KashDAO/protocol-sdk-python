@@ -16,7 +16,7 @@ Smart Account types live in :mod:`kashdao_protocol_sdk.smart_account.types`.
 from __future__ import annotations
 
 from collections.abc import Awaitable
-from typing import Protocol, runtime_checkable
+from typing import Literal, Protocol, runtime_checkable
 
 from pydantic import BaseModel, ConfigDict
 
@@ -40,6 +40,12 @@ class UnsignedTransaction(BaseModel):
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
+    # Discriminator that matches the TS side's `type: 'eip1559'`
+    # literal. EIP-1559 is the only tx kind protocol-sdk-python builds
+    # today; the field exists for cross-language parity and so
+    # consumers can branch on it in handlers that may later see
+    # `'eip4844'` or new kinds without changing the SDK contract.
+    type: Literal["eip1559"] = "eip1559"
     chain_id: int
     to: Hex
     data: Hex
