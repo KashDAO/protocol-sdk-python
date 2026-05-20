@@ -2,21 +2,22 @@
 """Vendor cross-language parity fixtures into the Python SDK tree.
 
 The TypeScript SDK is the canonical implementation. It emits parity
-fixtures via ``packages/protocol-sdk/scripts/generate-parity-fixtures.ts``,
-which records the expected serialized bytes (EOA) and UserOp hashes
-(SA) for a hand-crafted set of inputs. The Python SDK consumes the
-SAME JSON files and asserts its local re-encoding produces identical
-output — that guarantees a position opened via either SDK can be
-closed via the other.
+fixtures via a generator in the `@kashdao/protocol-sdk` source
+(https://github.com/KashDAO/protocol-sdk-typescript) which records
+the expected serialized bytes (EOA) and UserOp hashes (SA) for a
+hand-crafted set of inputs. The Python SDK consumes the SAME JSON
+files and asserts its local re-encoding produces identical output —
+that guarantees a position opened via either SDK can be closed via
+the other.
 
 Pipeline
 --------
 
-    packages/protocol-sdk/scripts/generate-parity-fixtures.ts
+    @kashdao/protocol-sdk (TS) parity-fixture generator
             |
             | (this script)
             v
-    packages/protocol-sdk-python/tests/parity/fixtures/*.json
+    tests/parity/fixtures/*.json
 
 Modes
 -----

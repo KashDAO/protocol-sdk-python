@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 # Manual publish flow for kashdao-protocol-sdk (Python).
 #
-# Same shape as packages/protocol-sdk/scripts/publish.sh and
-# packages/sdk/scripts/publish.sh — the three release scripts are kept
-# parallel so each package's release flow is local and self-contained.
+# Same shape as the sibling publish flows for `@kashdao/protocol-sdk`
+# (TypeScript) and `@kashdao/sdk` (TypeScript) — the three release
+# scripts are kept parallel so each package's release flow is local
+# and self-contained.
 #
 # This package and the TypeScript SDKs are INDEPENDENT — none depend on
 # the others at runtime. Publish ordering does not matter.
@@ -14,9 +15,9 @@
 # only when the OIDC path is unavailable (mirror workflow failure,
 # emergency hotfix without a tag, etc.).
 #
-# Usage (from the monorepo root, after a successful sync):
+# Usage (from the package root, after a successful sync):
 #
-#   bash packages/protocol-sdk-python/scripts/publish.sh
+#   bash scripts/publish.sh
 #
 # Requires: python ≥ 3.10, build, twine, ruff, mypy, pytest in the env.
 
