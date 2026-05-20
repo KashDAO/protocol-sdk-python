@@ -9,6 +9,10 @@ Official Python SDK for the [Kash](https://kash.bot) prediction-market protocol 
 [![mypy: strict](https://img.shields.io/badge/mypy-strict-blue.svg)](https://mypy.readthedocs.io/)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
+> 🧪 **Staging release.** Base mainnet (8453) protocol contracts are
+> not yet deployed; only Base Sepolia (84532) is supported today.
+> See [Supported chains](#supported-chains) for the mainnet timeline.
+
 > **Status: 0.1.0b1 (beta).** Both modes ship complete:
 >
 > - **EOA mode** (vanilla EIP-1559) — `create_eoa_client`. The
