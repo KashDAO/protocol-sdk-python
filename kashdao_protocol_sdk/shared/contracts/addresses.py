@@ -6,10 +6,11 @@ The TS side has a drift test against the canonical Kash deployments;
 the Python side stays in lockstep by being a pure structural copy
 reviewed on every protocol-sdk surface change.
 
-Mainnet (8453) is registered with a zero factory and intentionally not
-in :data:`SUPPORTED_CHAIN_IDS`. ``get_protocol_addresses(8453)`` raises
-:class:`KashConfigError` so consumers fail loudly instead of silently
-routing reads at the zero address.
+Both Base Sepolia (84532, testnet) and Base mainnet (8453) are deployed
+and in :data:`SUPPORTED_CHAIN_IDS`. The zero-address guard in
+``get_protocol_addresses`` remains as defence against a misconfigured
+custom chain — it fails loudly instead of silently routing reads at the
+zero address.
 """
 
 from __future__ import annotations
@@ -105,12 +106,12 @@ BASE_SEPOLIA: Final[ProtocolAddresses] = ProtocolAddresses(
     chain_id=84532,
     name="Base Sepolia",
     is_testnet=True,
-    factory="0x16107196eb976a90B21cf84049CeA6ec0CE60148",
-    usdc="0xD6F9b17fB20aB2E532ACBAB4C7eeCc0915278913",
-    oracle="0x869CF1934FfA542DC2396F49AFdfb01cE445dC61",
-    vault="0x822e2c5337Af726E1898ed80FBa85A5Da0Dc5a97",
-    tokens1155="0x693D75A07ab4f11bd7C542A0d48fd5fE958a3Eb2",
-    param_registry="0xdFEbec8D4E3C785Db02e6B5E8AF04Dc353682271",
+    factory="0x4d3F803222316bFa1860788F2A80Bce25a404e7F",
+    usdc="0x1F7268be50CfD7E2fF86b806E256B498C0db3A04",
+    oracle="0xE068f310B70F9C6c7DCE081858E5354724dc936a",
+    vault="0xa45Be09558b35ED35fC18371bFc7604bc2D930F5",
+    tokens1155="0x561F73fCE117d60b057864F93fd92C48aA54928e",
+    param_registry="0x811eee7C0F996F9BA2EfC2CAcA0368eF86e69fC9",
     smart_account=_DEFAULT_SMART_ACCOUNT,
 )
 
@@ -118,13 +119,14 @@ BASE_MAINNET: Final[ProtocolAddresses] = ProtocolAddresses(
     chain_id=8453,
     name="Base",
     is_testnet=False,
-    # Mainnet not yet deployed — gated by get_protocol_addresses.
-    factory=ZERO_ADDRESS,
+    # Base mainnet launch deployment. Mirrors the TS registry
+    # (src/shared/contracts/addresses.ts, chain 8453).
+    factory="0x5aC139604CeAb5fcf8Af6f8a85c337adAd964087",
     usdc="0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
-    oracle=None,
-    vault=None,
-    tokens1155=None,
-    param_registry=None,
+    oracle="0x16A5A01Dad652681F7b3c3C41A35905C57347399",
+    vault="0x84ADF5B2B7948c64C1d3fDA3797e0291dF2B2889",
+    tokens1155="0x00CD04410253A397F8f62A8dbd63e42EB8BD37eD",
+    param_registry="0xf02E57D356dfb98C35e251DA4382Ea1c637D36A4",
     smart_account=_DEFAULT_SMART_ACCOUNT,
 )
 
@@ -134,13 +136,15 @@ _REGISTRY: Final[dict[int, ProtocolAddresses]] = {
 }
 
 #: Chains where the Kash protocol contracts are deployed and usable
-#: today. ``create_direct_client`` accepts only these. Mainnet (8453)
-#: is intentionally NOT here yet — it lives in :data:`KNOWN_CHAIN_IDS`
-#: until the protocol contracts deploy.
-SUPPORTED_CHAIN_IDS: Final[tuple[int, ...]] = (BASE_SEPOLIA.chain_id,)
+#: today. ``create_direct_client`` accepts only these. Both Base Sepolia
+#: (84532, testnet) and Base mainnet (8453) are live — staging clients
+#: pin 84532, production clients pin 8453.
+SUPPORTED_CHAIN_IDS: Final[tuple[int, ...]] = (BASE_SEPOLIA.chain_id, BASE_MAINNET.chain_id)
 
-#: Chains the library has metadata for, including ones registered but
-#: not yet deployed (e.g. Base mainnet pre-launch).
+#: Chains the library has metadata for. Currently identical to
+#: :data:`SUPPORTED_CHAIN_IDS`; kept distinct so a future
+#: registered-but-undeployed chain can be surfaced in UIs without
+#: crashing ``get_protocol_addresses``.
 KNOWN_CHAIN_IDS: Final[tuple[int, ...]] = (BASE_SEPOLIA.chain_id, BASE_MAINNET.chain_id)
 
 
@@ -179,11 +183,11 @@ def get_protocol_addresses(chain_id: int) -> ProtocolAddresses:
         )
     if entry.factory == ZERO_ADDRESS:
         raise KashConfigError(
-            f"chainId {chain_id} ({entry.name}) is registered but the Kash "
-            f"protocol is not yet deployed there. Use chainId 84532 (Base "
-            f"Sepolia) for testnet integration today; track mainnet "
-            f"deployment status at "
-            f"https://github.com/KashDAO/protocol-sdk-python/issues. "
+            f"chainId {chain_id} ({entry.name}) is registered but its factory "
+            f"address is the zero address, so the Kash protocol cannot be "
+            f"reached there. Use a supported chain "
+            f"({', '.join(str(c) for c in SUPPORTED_CHAIN_IDS)}), or pass a "
+            f"custom_chain= config with the correct deployed addresses. "
             f"(Detect this case programmatically with "
             f"is_known_chain_id({chain_id}) and not "
             f"is_supported_chain_id({chain_id}).)",

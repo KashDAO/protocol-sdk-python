@@ -40,7 +40,7 @@ def _extract_imported_names(text: str) -> set[str]:
     """Return every symbol imported via ``from kashdao_protocol_sdk import (...)``.
 
     Multi-line parenthesised imports are the only form the README uses
-    (each import block already spans 5–10 lines). Each line inside the
+    (each import block already spans 5-10 lines). Each line inside the
     parens that starts with a bare identifier is a symbol.
     """
     names: set[str] = set()

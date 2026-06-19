@@ -7,8 +7,8 @@ The Python README at ``packages/protocol-sdk-python/README.md``
 advertises the supported chain ids verbatim in its "Chain support"
 section:
 
-    | Base mainnet | 8453     | ⏳ Pre-deploy — ... |
-    | Base Sepolia | 84532    | ✅ Live              |
+    | Base mainnet | 8453     | ✅ Live |
+    | Base Sepolia | 84532    | ✅ Live |
 
 If ``BASE_SEPOLIA.chain_id`` or ``BASE_MAINNET.chain_id`` in
 ``shared/contracts/addresses.py`` ever change (a new testnet, a
@@ -26,8 +26,6 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-
-import pytest
 
 from kashdao_protocol_sdk.shared.contracts.addresses import (
     BASE_MAINNET,
@@ -54,9 +52,8 @@ class TestReadmeChainIdDrift:
         )
 
     def test_readme_mentions_base_mainnet_chain_id(self) -> None:
-        """Same invariant for mainnet — even though the chain isn't
-        yet "Live", the README documents it as Pre-deploy and refers
-        to ``CHAIN_NOT_DEPLOYED`` errors for ``chain_id=8453``.
+        """Same invariant for mainnet — the README documents Base
+        mainnet (8453) as Live and uses ``chain_id=8453`` in examples.
         """
         assert str(BASE_MAINNET.chain_id) in README, (
             f"README is missing Base mainnet chain id {BASE_MAINNET.chain_id}."
@@ -67,9 +64,7 @@ class TestReadmeChainIdDrift:
         rewritten or moved, this catches the move before customers see
         stale rows.
         """
-        sepolia_row_re = re.compile(
-            r"Base\s*Sepolia.+?" + str(BASE_SEPOLIA.chain_id), re.DOTALL
-        )
+        sepolia_row_re = re.compile(r"Base\s*Sepolia.+?" + str(BASE_SEPOLIA.chain_id), re.DOTALL)
         mainnet_row_re = re.compile(
             r"Base\s*(?:mainnet|Mainnet).+?" + str(BASE_MAINNET.chain_id) + r"(?!\d)",
             re.DOTALL,
@@ -85,8 +80,7 @@ class TestReadmeChainIdDrift:
         """Source-side sanity invariant the README depends on: every
         SUPPORTED chain id must also appear in KNOWN. A drift here
         would let the SDK accept a chain that isn't even acknowledged
-        in the registry — the README's "Pre-deploy" footnote
-        infrastructure assumes KNOWN ⊇ SUPPORTED.
+        in the registry — KNOWN must remain a superset of SUPPORTED.
         """
         for chain_id in SUPPORTED_CHAIN_IDS:
             assert chain_id in KNOWN_CHAIN_IDS, (

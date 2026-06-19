@@ -74,9 +74,7 @@ async def get_market_state(web3: AsyncWeb3, market_address: Hex) -> MarketState:
             contract.functions.marketId().call(),
             contract.functions.cfg().call(),
         ]
-        results = await asyncio.gather(
-            reserve_call, *weight_calls, *supply_calls, *identity_calls
-        )
+        results = await asyncio.gather(reserve_call, *weight_calls, *supply_calls, *identity_calls)
     except Exception as cause:
         if KashProtocolError.is_(cause):
             raise

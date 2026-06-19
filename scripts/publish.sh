@@ -55,7 +55,29 @@ done
 PKG_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$PKG_DIR"
 
-VERSION="$(python -c "import importlib.util, pathlib; spec = importlib.util.spec_from_file_location('v', 'kashdao_protocol_sdk/_version.py'); m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m); print(m.__version__)")"
+# Resolve a Python interpreter. macOS + most Linux distros ship `python3`
+# but not `python`; the venv-activated path provides both. Prefer the
+# pinned venv if present (`packages/protocol-sdk-python/.venv/bin/python`),
+# then `python3`, then `python`.
+#
+# When the venv exists we also activate it so bare tool invocations
+# (`pip`, `ruff`, `mypy`, `pytest`, `twine`, `cyclonedx-py`) resolve to
+# the venv's bin/. Without activation, a system shell with no `python`
+# on PATH also has no `pip`, which breaks the gate.
+if [ -x "$PKG_DIR/.venv/bin/python" ]; then
+  PY="$PKG_DIR/.venv/bin/python"
+  # shellcheck disable=SC1091
+  source "$PKG_DIR/.venv/bin/activate"
+elif command -v python3 >/dev/null 2>&1; then
+  PY="python3"
+elif command -v python >/dev/null 2>&1; then
+  PY="python"
+else
+  echo "  ✗ No Python interpreter found. Install Python 3.10+ first." >&2
+  exit 1
+fi
+
+VERSION="$("$PY" -c "import importlib.util, pathlib; spec = importlib.util.spec_from_file_location('v', 'kashdao_protocol_sdk/_version.py'); m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m); print(m.__version__)")"
 TAG="v$VERSION"
 
 if [ "$DRY_RUN" = "1" ]; then
@@ -67,13 +89,13 @@ echo
 
 # ---- Pre-flight checks ----------------------------------------------------
 
-echo "▶ twine + build availability check"
-python -m build --version >/dev/null 2>&1 || {
-  echo "  ✗ python -m build not available. Run: pip install build twine"
+echo "▶ twine + build availability check (interpreter: $PY)"
+"$PY" -m build --version >/dev/null 2>&1 || {
+  echo "  ✗ $PY -m build not available. Run: $PY -m pip install build twine"
   exit 1
 }
-python -m twine --version >/dev/null 2>&1 || {
-  echo "  ✗ python -m twine not available. Run: pip install build twine"
+"$PY" -m twine --version >/dev/null 2>&1 || {
+  echo "  ✗ $PY -m twine not available. Run: $PY -m pip install build twine"
   exit 1
 }
 echo "  ✓ build + twine available"
@@ -116,11 +138,11 @@ echo "  · pytest (no integration / e2e / parity)"
 pytest -m 'not integration and not e2e and not parity' -ra --strict-markers
 
 echo "  · ABI drift check"
-python scripts/sync-abis.py --check
+"$PY" scripts/sync-abis.py --check
 
 echo "  · build wheel + sdist"
 rm -rf dist build
-python -m build
+"$PY" -m build
 
 # ---- SBOM (CycloneDX) -----------------------------------------------------
 #
@@ -169,12 +191,12 @@ fi
 
 echo
 if [ "$DRY_RUN" = "1" ]; then
-  echo "▶ Publishing  [DRY-RUN — would run: python -m twine upload dist/*]"
+  echo "▶ Publishing  [DRY-RUN — would run: $PY -m twine upload dist/*]"
   echo "  Skipping the actual upload. Pre-flight gate, build, SBOM, and CHANGELOG"
   echo "  extraction all ran above; the artifacts in \`dist/\` are what would ship."
 else
   echo "▶ Publishing"
-  python -m twine upload dist/*
+  "$PY" -m twine upload dist/*
 
   echo
   echo "✓ Published kashdao-protocol-sdk==$VERSION"

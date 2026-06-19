@@ -96,7 +96,12 @@ def _to_eth_account_dict(transaction: UnsignedTransaction) -> dict[str, object]:
     a checksum-cased string or raw bytes. We checksum here so callers
     can keep passing lowercase hex through the SDK boundary.
     """
-    from eth_utils import to_checksum_address  # local import: hot path is signing, not module load
+    # `eth_utils.address` is the explicit-export module — mypy strict
+    # rejects `from eth_utils import to_checksum_address` because the
+    # top-level `__init__` doesn't list it in `__all__`.
+    from eth_utils.address import (
+        to_checksum_address,  # local import: hot path is signing, not module load
+    )
 
     return {
         "type": 2,

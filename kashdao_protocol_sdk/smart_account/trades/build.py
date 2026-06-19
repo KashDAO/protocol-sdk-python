@@ -286,7 +286,7 @@ async def build_close_position_user_op(
         addresses,
         market_address,
         BuildSellParams(
-            smart_account=params.account,
+            account=params.account,
             outcome=params.outcome,
             amount_tokens=balance,
             max_slippage_bps=params.max_slippage_bps,

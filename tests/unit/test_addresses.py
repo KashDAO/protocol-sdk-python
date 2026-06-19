@@ -23,10 +23,10 @@ class TestRegistry:
         assert 84532 in SUPPORTED_CHAIN_IDS
         assert 84532 in KNOWN_CHAIN_IDS
 
-    def test_base_mainnet_known_but_not_supported(self) -> None:
-        assert not is_supported_chain_id(8453)
+    def test_base_mainnet_supported(self) -> None:
+        assert is_supported_chain_id(8453)
         assert is_known_chain_id(8453)
-        assert 8453 not in SUPPORTED_CHAIN_IDS
+        assert 8453 in SUPPORTED_CHAIN_IDS
         assert 8453 in KNOWN_CHAIN_IDS
 
     def test_unknown_chain(self) -> None:
@@ -43,12 +43,15 @@ class TestGetProtocolAddresses:
         assert addrs.factory == BASE_SEPOLIA.factory
         assert addrs.usdc == BASE_SEPOLIA.usdc
 
-    def test_mainnet_raises_chain_not_deployed(self) -> None:
-        with pytest.raises(KashConfigError) as exc_info:
-            get_protocol_addresses(8453)
-        assert exc_info.value.code == "CHAIN_NOT_DEPLOYED"
-        # Sanity: factory in registry is zero address (the gating signal).
-        assert int(BASE_MAINNET.factory, 16) == 0
+    def test_mainnet_resolves(self) -> None:
+        addrs = get_protocol_addresses(8453)
+        assert addrs.chain_id == 8453
+        assert addrs.name == "Base"
+        assert addrs.is_testnet is False
+        assert addrs.factory == BASE_MAINNET.factory
+        assert addrs.usdc == BASE_MAINNET.usdc
+        # Mainnet factory is a real (non-zero) deployed address.
+        assert int(BASE_MAINNET.factory, 16) != 0
 
     def test_unknown_chain_raises(self) -> None:
         with pytest.raises(KashConfigError) as exc_info:
@@ -63,9 +66,8 @@ class TestSmartAccountConfig:
         assert sa.entry_point_version == "0.7"
 
     def test_mainnet_has_canonical_sa_config(self) -> None:
-        # Even though the protocol isn't deployed on mainnet, the SA config
-        # uses the canonical CREATE2 addresses (which are identical across
-        # all EVM chains).
+        # The SA config uses the canonical CREATE2 addresses, which are
+        # identical across all EVM chains.
         sa = BASE_MAINNET.smart_account
         assert sa.entry_point_address == "0x0000000071727De22E5E9d8BAf0edAc6f37da032"
         assert sa.entry_point_version == "0.7"

@@ -10,6 +10,28 @@ breaking changes are explicitly called out in the entry.
 
 ## [Unreleased]
 
+## [0.1.0b2] — 2026-06-18
+
+### Added
+
+- **Base mainnet (8453) support.** The Kash protocol is now deployed on
+  Base mainnet; `8453` is registered with its live contract addresses
+  (factory, oracle, vault, tokens1155, param-registry) and added to
+  `SUPPORTED_CHAIN_IDS`. `get_protocol_addresses(8453)` and
+  `create_eoa_client` / `create_smart_account_client` with
+  `chain_id=8453` now work. Addresses mirror the TypeScript
+  `@kashdao/protocol-sdk` registry one-to-one (parity-validated).
+
+### Changed
+
+- `CHAIN_NOT_DEPLOYED` guard message reworded — it now only fires for a
+  custom chain registered with a zero-address factory, not for Base
+  mainnet.
+- Re-vendored the contract ABIs from the canonical `@kashdao/protocol-sdk`
+  source so they match the deployed mainnet/testnet contracts (the
+  vendored copies had drifted since the initial port). Additive only —
+  new functions/events; no existing selector changed.
+
 ## [0.1.0b1] — 2026-05-20
 
 Initial public beta release.

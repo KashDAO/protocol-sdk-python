@@ -59,11 +59,55 @@
   },
   {
     "type": "function",
+    "name": "cancel",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "cancelPriceWad",
+    "inputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "cancelledAt",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint40",
+        "internalType": "uint40"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "cfg",
     "inputs": [],
     "outputs": [
       {
         "name": "numOutcomes",
+        "type": "uint8",
+        "internalType": "uint8"
+      },
+      {
+        "name": "maxWinningOutcomes",
         "type": "uint8",
         "internalType": "uint8"
       },
@@ -96,6 +140,11 @@
         "name": "vaultEligible",
         "type": "bool",
         "internalType": "bool"
+      },
+      {
+        "name": "cancelGraceSeconds",
+        "type": "uint32",
+        "internalType": "uint32"
       }
     ],
     "stateMutability": "view"
@@ -210,6 +259,11 @@
             "internalType": "uint8"
           },
           {
+            "name": "maxWinningOutcomes",
+            "type": "uint8",
+            "internalType": "uint8"
+          },
+          {
             "name": "sellFeeBps",
             "type": "uint16",
             "internalType": "uint16"
@@ -238,6 +292,11 @@
             "name": "vaultEligible",
             "type": "bool",
             "internalType": "bool"
+          },
+          {
+            "name": "cancelGraceSeconds",
+            "type": "uint32",
+            "internalType": "uint32"
           }
         ]
       },
@@ -254,6 +313,25 @@
     ],
     "outputs": [],
     "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "isWinningOutcome",
+    "inputs": [
+      {
+        "name": "outcome",
+        "type": "uint8",
+        "internalType": "uint8"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
   },
   {
     "type": "function",
@@ -391,6 +469,54 @@
   },
   {
     "type": "function",
+    "name": "quoteRedeem",
+    "inputs": [
+      {
+        "name": "outcome",
+        "type": "uint8",
+        "internalType": "uint8"
+      },
+      {
+        "name": "winningTokensWad",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "assetsOutUsdc",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "quoteRedeemCancelled",
+    "inputs": [
+      {
+        "name": "outcome",
+        "type": "uint8",
+        "internalType": "uint8"
+      },
+      {
+        "name": "tokensInWad",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "assetsOutUsdc",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "quoteSellBasketForVault",
     "inputs": [
       {
@@ -498,6 +624,74 @@
   },
   {
     "type": "function",
+    "name": "redeem",
+    "inputs": [
+      {
+        "name": "outcome",
+        "type": "uint8",
+        "internalType": "uint8"
+      },
+      {
+        "name": "winningTokensWad",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "minAssetsOutUsdc",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "receiver",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "assetsOutUsdc",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "redeemCancelled",
+    "inputs": [
+      {
+        "name": "outcome",
+        "type": "uint8",
+        "internalType": "uint8"
+      },
+      {
+        "name": "tokensInWad",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "minAssetsOutUsdc",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "receiver",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "assetsOutUsdc",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "reserveWad",
     "inputs": [],
     "outputs": [
@@ -517,6 +711,24 @@
         "name": "winningOutcome_",
         "type": "uint8",
         "internalType": "uint8"
+      },
+      {
+        "name": "evidenceHash_",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "resolveMulti",
+    "inputs": [
+      {
+        "name": "winningMask_",
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
         "name": "evidenceHash_",
@@ -618,6 +830,19 @@
   },
   {
     "type": "function",
+    "name": "sumWinningSupplyWad",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "supplyWad",
     "inputs": [
       {
@@ -634,6 +859,25 @@
       }
     ],
     "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "sweepCancelledDust",
+    "inputs": [
+      {
+        "name": "receiver",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable"
   },
   {
     "type": "function",
@@ -682,6 +926,32 @@
   },
   {
     "type": "function",
+    "name": "winningCount",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint8",
+        "internalType": "uint8"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "winningMask",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "winningOutcome",
     "inputs": [],
     "outputs": [
@@ -714,12 +984,6 @@
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"
-      },
-      {
-        "name": "supplyAfterWad",
-        "type": "uint256[]",
-        "indexed": false,
-        "internalType": "uint256[]"
       }
     ],
     "anonymous": false
@@ -757,12 +1021,25 @@
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "CancelledDustSwept",
+    "inputs": [
+      {
+        "name": "receiver",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
       },
       {
-        "name": "supplyAfterWad",
-        "type": "uint256[]",
+        "name": "amountUsdc",
+        "type": "uint256",
         "indexed": false,
-        "internalType": "uint256[]"
+        "internalType": "uint256"
       }
     ],
     "anonymous": false
@@ -776,6 +1053,37 @@
         "type": "uint64",
         "indexed": false,
         "internalType": "uint64"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "MarketCancelled",
+    "inputs": [
+      {
+        "name": "initiator",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "reserveAtCancelWad",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "cancelPriceWad",
+        "type": "uint256[]",
+        "indexed": false,
+        "internalType": "uint256[]"
+      },
+      {
+        "name": "cancelledAt",
+        "type": "uint40",
+        "indexed": false,
+        "internalType": "uint40"
       }
     ],
     "anonymous": false
@@ -857,6 +1165,31 @@
   },
   {
     "type": "event",
+    "name": "MarketResolvedMulti",
+    "inputs": [
+      {
+        "name": "winningMask",
+        "type": "uint256",
+        "indexed": true,
+        "internalType": "uint256"
+      },
+      {
+        "name": "winningCount",
+        "type": "uint8",
+        "indexed": false,
+        "internalType": "uint8"
+      },
+      {
+        "name": "evidenceHash",
+        "type": "bytes32",
+        "indexed": false,
+        "internalType": "bytes32"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
     "name": "MarketSeeded",
     "inputs": [
       {
@@ -895,12 +1228,43 @@
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "ProtocolTradeFeeCollected",
+    "inputs": [
+      {
+        "name": "payer",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
       },
       {
-        "name": "supplyAfterWad",
-        "type": "uint256[]",
+        "name": "treasury",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "marketId",
+        "type": "uint256",
+        "indexed": true,
+        "internalType": "uint256"
+      },
+      {
+        "name": "isBuy",
+        "type": "bool",
         "indexed": false,
-        "internalType": "uint256[]"
+        "internalType": "bool"
+      },
+      {
+        "name": "feeUsdc",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
       }
     ],
     "anonymous": false
@@ -917,6 +1281,80 @@
       },
       {
         "name": "winningTokensWad",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "assetsOutUsdc",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "reserveAfterWad",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RedeemCancelled",
+    "inputs": [
+      {
+        "name": "receiver",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "outcome",
+        "type": "uint8",
+        "indexed": true,
+        "internalType": "uint8"
+      },
+      {
+        "name": "tokensInWad",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "assetsOutUsdc",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "reserveAfterWad",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RedeemMulti",
+    "inputs": [
+      {
+        "name": "receiver",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "outcome",
+        "type": "uint8",
+        "indexed": true,
+        "internalType": "uint8"
+      },
+      {
+        "name": "tokensInWad",
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"
@@ -969,19 +1407,28 @@
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"
-      },
-      {
-        "name": "supplyAfterWad",
-        "type": "uint256[]",
-        "indexed": false,
-        "internalType": "uint256[]"
       }
     ],
     "anonymous": false
   },
   {
     "type": "error",
+    "name": "CancelDustNotSettled",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "CancelTooEarly",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "DeadlinePassed",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "EmptyWinningMask",
     "inputs": []
   },
   {
@@ -992,6 +1439,11 @@
   {
     "type": "error",
     "name": "InvalidInitialization",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidMaxWinningOutcomes",
     "inputs": []
   },
   {
@@ -1016,6 +1468,16 @@
   },
   {
     "type": "error",
+    "name": "MarketPaused",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "MultipleWinners",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "NotFactory",
     "inputs": []
   },
@@ -1031,7 +1493,17 @@
   },
   {
     "type": "error",
+    "name": "NotOracleOrAfterGrace",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "NotVault",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "NotWinningOutcome",
     "inputs": []
   },
   {
@@ -1082,7 +1554,17 @@
   },
   {
     "type": "error",
+    "name": "TooManyWinners",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "WeightsNotNormalized",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "WinningMaskOutOfBounds",
     "inputs": []
   },
   {

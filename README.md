@@ -9,11 +9,11 @@ Official Python SDK for the [Kash](https://kash.bot) prediction-market protocol 
 [![mypy: strict](https://img.shields.io/badge/mypy-strict-blue.svg)](https://mypy.readthedocs.io/)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
-> 🧪 **Staging release.** Base mainnet (8453) protocol contracts are
-> not yet deployed; only Base Sepolia (84532) is supported today.
-> See [Supported chains](#supported-chains) for the mainnet timeline.
+> 🚀 **Mainnet live.** Both Base Sepolia (84532, testnet) and Base
+> mainnet (8453) protocol contracts are deployed and supported.
+> See [Supported chains](#supported-chains) for the chain registry.
 
-> **Status: 0.1.0b1 (beta).** Both modes ship complete:
+> **Status: 0.1.0b2 (beta).** Both modes ship complete:
 >
 > - **EOA mode** (vanilla EIP-1559) — `create_eoa_client`. The
 >   canonical Hummingbot integration path; bring your own RPC + signer.
@@ -29,11 +29,11 @@ Official Python SDK for the [Kash](https://kash.bot) prediction-market protocol 
 
 ## Supported chains
 
-| Chain        | Chain ID | Status                                                            |
-| ------------ | -------- | ----------------------------------------------------------------- |
-| Base mainnet | 8453     | ⏳ Pre-deploy — `KashChainError(CHAIN_NOT_DEPLOYED)` until launch |
-| Base Sepolia | 84532    | ✅ Live                                                           |
-| Custom chain | any      | ✅ Via `custom_chain=CustomChain(...)` (Anvil / forks / dev)      |
+| Chain        | Chain ID | Status                                                       |
+| ------------ | -------- | ------------------------------------------------------------ |
+| Base mainnet | 8453     | ✅ Live                                                      |
+| Base Sepolia | 84532    | ✅ Live                                                      |
+| Custom chain | any      | ✅ Via `custom_chain=CustomChain(...)` (Anvil / forks / dev) |
 
 ## When to use this package
 

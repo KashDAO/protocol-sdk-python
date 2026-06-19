@@ -3,14 +3,14 @@
 Mirrors ``src/shared/custom-chain.ts``.
 
 The SDK ships with a static registry of supported chains (Base Sepolia
-today; Base mainnet when deployed). Pydantic / dataclass validation
-rejects any other chain id.
+and Base mainnet). Pydantic / dataclass validation rejects any other
+chain id.
 
 For local development against Anvil / Hardhat / Tenderly forks /
 sidechains, consumers pass a :class:`CustomChain` config field. When
 set, the SDK uses the supplied addresses verbatim and bypasses the
-registry entirely. The mainnet-not-deployed guard does NOT apply — the
-consumer takes full ownership of address correctness.
+registry entirely. The zero-address deployment guard does NOT apply —
+the consumer takes full ownership of address correctness.
 """
 
 from __future__ import annotations

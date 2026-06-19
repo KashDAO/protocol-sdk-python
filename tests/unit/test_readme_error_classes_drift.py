@@ -1,7 +1,7 @@
 """README error-class catalog ↔ exported `Kash*Error` subclasses parity.
 
 The Python SDK README documents every Kash*Error subclass in the
-"Error hierarchy" section (~README lines 282–286):
+"Error hierarchy" section (~README lines 282-286):
 
     - **Error hierarchy**: `KashProtocolError` and 6 subclasses
       (`KashConfigError`, `KashChainError`, `KashBundlerError`,
@@ -46,11 +46,7 @@ def _extract_module_error_classes() -> set[str]:
     rather than a hardcoded list means a new exported error
     auto-shows up in the parity check.
     """
-    return {
-        name
-        for name in dir(kashdao_protocol_sdk)
-        if re.fullmatch(r"Kash[A-Z]\w*Error", name)
-    }
+    return {name for name in dir(kashdao_protocol_sdk) if re.fullmatch(r"Kash[A-Z]\w*Error", name)}
 
 
 README_CLASSES = _extract_readme_error_classes()

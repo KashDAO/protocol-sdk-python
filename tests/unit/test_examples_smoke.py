@@ -61,14 +61,18 @@ def _discover_examples() -> list[Path]:
 EXAMPLE_PATHS = _discover_examples()
 
 
-@pytest.mark.parametrize("path", EXAMPLE_PATHS, ids=lambda p: p.relative_to(EXAMPLES_DIR).as_posix())
+@pytest.mark.parametrize(
+    "path", EXAMPLE_PATHS, ids=lambda p: p.relative_to(EXAMPLES_DIR).as_posix()
+)
 def test_example_parses(path: Path) -> None:
     """Every example must parse as valid Python."""
     src = path.read_text(encoding="utf-8")
     ast.parse(src, filename=str(path))
 
 
-@pytest.mark.parametrize("path", EXAMPLE_PATHS, ids=lambda p: p.relative_to(EXAMPLES_DIR).as_posix())
+@pytest.mark.parametrize(
+    "path", EXAMPLE_PATHS, ids=lambda p: p.relative_to(EXAMPLES_DIR).as_posix()
+)
 def test_example_imports(path: Path) -> None:
     """Every example must import cleanly against the installed SDK.
 
