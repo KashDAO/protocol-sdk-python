@@ -1,23 +1,29 @@
 name: Publish to PyPI
 
-# Triggered on tag push (v*) at the public mirror
-# (KashDAO/protocol-sdk-python). Builds the wheel + sdist and uploads
-# to PyPI via OIDC trusted publishing — no PyPI API token in the repo.
+# MANUAL ONLY. Publishing is never automatic — a tag push or merge must
+# not upload to PyPI. Trigger this from the Actions tab (or
+# `gh workflow run publish-pypi.yml --ref main -f version=<x>`) and type
+# the version you intend to publish. The version must match the wheel
+# built from the checked-out ref (kashdao_protocol_sdk/_version.py), or
+# the run fails before uploading.
 #
-# This workflow ships INSIDE the mirrored package (see
-# `scripts/sync-to-public-mirror.ts`'s COPY_ENTRIES) so that pushing
-# a tag automatically uploads.
+# Builds the wheel + sdist and uploads to PyPI via OIDC trusted
+# publishing — no PyPI API token in the repo.
 #
 # Setup (one-time on the public mirror):
 #   1. Create a "trusted publisher" on PyPI for the project, scoped to
-#      `KashDAO/protocol-sdk-python` + this workflow filename.
+#      `KashDAO/protocol-sdk-python` + this workflow filename + the
+#      `pypi` environment.
 #   2. No API token needed — the OIDC token issued by GitHub Actions
 #      is exchanged for a short-lived PyPI upload credential.
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish — must match kashdao_protocol_sdk/_version.py (e.g. 0.1.0b2)'
+        required: true
+        type: string
 
 permissions:
   id-token: write
@@ -49,17 +55,17 @@ jobs:
       - name: Build wheel + sdist
         run: python -m build
 
-      - name: Verify version matches tag
+      - name: Verify requested version matches build
         run: |
-          # Extract the version from the built wheel filename — robust
-          # against single-line vs heredoc shell quoting, and uses the
-          # exact value hatchling baked into the artifact.
-          tag="${GITHUB_REF#refs/tags/v}"
+          # The operator types the version they intend to publish; it
+          # must equal the version hatchling baked into the wheel. Guards
+          # against dispatching the workflow against the wrong ref.
+          want="${{ github.event.inputs.version }}"
           wheel=$(find dist -maxdepth 1 -name '*.whl' -print -quit)
-          # kashdao_protocol_sdk-0.1.0b1-py3-none-any.whl → 0.1.0b1
+          # kashdao_protocol_sdk-0.1.0b2-py3-none-any.whl → 0.1.0b2
           pkg=$(basename "$wheel" | awk -F- '{print $2}')
-          if [ "$tag" != "$pkg" ]; then
-            echo "Tag v$tag does not match wheel version ($pkg)"
+          if [ "$want" != "$pkg" ]; then
+            echo "Requested version $want does not match built wheel version ($pkg)"
             exit 1
           fi
           echo "Version match: $pkg"
@@ -68,5 +74,5 @@ jobs:
         uses: pypa/gh-action-pypi-publish@76f52bc884231f62b9a034ebfe128415bbaabdfc  # v1.12.4
         with:
           packages-dir: dist/
-          # Skip-existing covers reruns of an already-published tag.
+          # Skip-existing covers reruns of an already-published version.
           skip-existing: true
