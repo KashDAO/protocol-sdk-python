@@ -22,11 +22,60 @@ not a Python one; that work is out of scope here.
 So: Hummingbot strategies `import kashdao_protocol_sdk` directly and
 call it from their tick loop.
 
+## Solana markets
+
+The reference scripts below trade **Base** (EVM) markets. New Kash
+markets launch on Solana mainnet-beta, which this SDK serves through
+`kashdao_protocol_sdk.solana` (`pip install 'kashdao-protocol-sdk[solana]'`).
+No Solana variant of the Hummingbot scripts ships yet: the Hummingbot
+runtime is not part of this package's test environment, so a script
+written for it could not be exercised here, and an untested trading
+script is worse than none. The integration shape is the same one the
+Base scripts use — create the client once, call it from the tick loop —
+with `create_solana_client(rpc_url=...)`, `keypair_signer(...)` and
+`await kash.trades.buy(market=..., outcome=..., amount_usdc=...,
+max_slippage_bps=..., signer=...)`; see `examples/solana/` for the
+same calls in standalone scripts.
+
+## Start here: the runnable reference
+
+`examples/hummingbot/kash_accumulator.py` is a **complete, runnable**
+Hummingbot script — a single-venue DCA/accumulator that buys a fixed
+USDC notional of one market outcome on an interval until a budget is
+filled, on **Base mainnet (8453) by default**, with an optional price
+ceiling. It exercises the full trade path (quote → approve → buy →
+confirm → position) and is the template to fork. Its SDK read path is
+validated against live mainnet markets.
+
+Three files ship together:
+
+| File                                            | Purpose                                                                                  |
+| ----------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `examples/hummingbot/kash_accumulator.py`       | The Hummingbot script (config-driven, mainnet-default, runnable as shipped).             |
+| `examples/hummingbot/conf_kash_accumulator.yml` | Sample config template (edit + drop into Hummingbot's `conf/scripts/`).                  |
+| `examples/hummingbot/find_kash_markets.py`      | Lists live market addresses to put in `market_address` (needs a read-only Kash API key). |
+
+```bash
+# 1. discover a market address + outcome index
+KASH_API_KEY=kash_live_... python examples/hummingbot/find_kash_markets.py
+# 2. set the trading EOA key (NEVER stored in the YAML)
+export KASH_TRADER_PK=0x...
+# 3. inside Hummingbot, with conf_kash_accumulator.yml edited:
+start --script kash_accumulator.py --conf conf_kash_accumulator.yml
+```
+
+> **Market discovery still routes through the Kash API.** Trading is
+> on-chain and non-custodial, but finding _which_ market to trade needs
+> a (free, read-only) `markets:read` API key — or grab a market address
+> from the Kash app UI and skip the helper. The trading EOA key is
+> separate and never touches the API.
+
 ## Strategy compatibility
 
 | Hummingbot strategy                              | Status           | Notes                                                                                                                     |
 | ------------------------------------------------ | ---------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| `amm_arb`-style cross-venue arbitrage            | ✅ Supported     | Reference `examples/hummingbot/amm_arb_kash_uniswap.py` runs against Base Sepolia in EOA mode                             |
+| Single-venue DCA / accumulator                   | ✅ Runnable      | `examples/hummingbot/kash_accumulator.py` — complete, mainnet-default, ships as a working strategy                        |
+| `amm_arb`-style cross-venue arbitrage            | ⚠️ Skeleton      | `examples/hummingbot/amm_arb_kash_uniswap.py` — SDK shape is real, but the counter-venue quote + profitability are stubs  |
 | `pure_market_making` (PMM)                       | ❌ Not supported | AMMs do not honor resting limit orders; PMM's order-book assumptions cannot apply                                         |
 | Strategies relying on `cancel_order` for hedging | ⚠️ Limited       | Once a transaction is on-chain, the trade is atomic. Pre-confirmation cancellation is best-effort (RPC nonce-replacement) |
 
@@ -54,7 +103,7 @@ import asyncio
 import os
 
 from eth_account import Account
-from hummingbot.strategy.script_strategy_base import ScriptStrategyBase
+from hummingbot.strategy.strategy_v2_base import StrategyV2Base
 from kashdao_protocol_sdk import (
     BuildApproveParams,
     BuildBuyParams,
@@ -68,11 +117,11 @@ from kashdao_protocol_sdk import (
 
 
 KASH_MARKET = os.environ["KASH_MARKET_ADDRESS"]
-BASE_SEPOLIA_RPC = os.environ["BASE_SEPOLIA_RPC"]
+BASE_RPC = os.environ["BASE_RPC"]
 KASH_PK = os.environ["KASH_TRADER_PK"]
 
 
-class KashAmmArbStrategy(ScriptStrategyBase):
+class KashAmmArbStrategy(StrategyV2Base):
     """Hummingbot script that uses kashdao-protocol-sdk in its tick."""
 
     markets = {}  # No Hummingbot connectors — we drive Kash via the SDK directly.
@@ -83,8 +132,8 @@ class KashAmmArbStrategy(ScriptStrategyBase):
         self._signer = viem_account_eoa_signer(account)
         self._owner = account.address
         self._kash = create_eoa_client(
-            chain_id=84532,
-            rpc=BASE_SEPOLIA_RPC,
+            chain_id=8453,
+            rpc=BASE_RPC,
             signer=self._signer,
         )
         self._approved = False
@@ -122,7 +171,7 @@ class KashAmmArbStrategy(ScriptStrategyBase):
             await self._kash.trades.send.buy(
                 KASH_MARKET,
                 BuildBuyParams(
-                    smart_account=self._owner,
+                    account=self._owner,
                     outcome=0,
                     amount_usdc=usdc(10),
                     max_slippage_bps=50,
@@ -185,15 +234,26 @@ distinguish from operational errors).
   signing-infra round-trips. Inspect `decoded_error` to see which
   Market custom error fired.
 
+## Validation status
+
+- **SDK read path: validated on Base mainnet.** `markets.state` and
+  `markets.quote` have been exercised against live mainnet markets
+  (chain 8453) — the deployed Market ABI matches the SDK.
+- **Write path (approve / buy): operator-validated with funds.** The
+  read path proves connectivity + ABI; the first live trade requires a
+  trading EOA funded with USDC + ETH on Base. Validate with a tiny
+  `total_budget_usdc` (e.g. 1–2 USDC) and a single small slice, confirm
+  the on-chain `tx`, then scale up. A ≥ 1 hour soak under real risk
+  limits is the bar before unattended operation.
+
 ## Open issues / future work
 
-- **`examples/hummingbot/amm_arb_kash_uniswap.py`** — reference
-  strategy is now shipped. Treat it as a SKELETON: the SDK
-  integration shape is production-ready, but the Uniswap quote and
-  the spread-detection logic are stubbed and need to be wired to
-  your real venue + sizing model before going live. A long-running
-  Base Sepolia integration test that drives the strategy against a
-  live testnet bundler for ≥ 1 hour is tracked separately.
+- **`examples/hummingbot/kash_accumulator.py`** — shipped and runnable;
+  the recommended starting point (see "Start here" above).
+- **`examples/hummingbot/amm_arb_kash_uniswap.py`** — SKELETON: the SDK
+  integration shape is production-ready, but the Uniswap quote and the
+  spread-detection logic are stubbed and need to be wired to your real
+  venue + sizing model before going live.
 - **Smart Account mode for Hummingbot** — `create_smart_account_client`
   is fully supported in the SDK; a Hummingbot-specific worked
   example for AA stacks (Privy embedded wallets, Coinbase Smart

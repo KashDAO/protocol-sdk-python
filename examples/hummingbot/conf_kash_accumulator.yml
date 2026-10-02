@@ -1,0 +1,31 @@
+# Sample config for kash_accumulator.py (Hummingbot script).
+#
+# Copy this into your Hummingbot `conf/scripts/` directory and edit the
+# values, then run:
+#
+#   start --script kash_accumulator.py --conf conf_kash_accumulator.yml
+#
+# SECURITY: the trading EOA private key is NOT in this file. Set it in the
+# environment variable named below before starting Hummingbot:
+#
+#   export KASH_TRADER_PK=0x<your-eoa-private-key>
+#
+# Fund that EOA with USDC (to trade) and a little ETH (for gas) on Base.
+
+script_file_name: kash_accumulator.py
+
+# ── Network / market ──────────────────────────────────────────────
+chain_id: 8453                     # 8453 = Base mainnet, 84532 = Base Sepolia
+rpc_url: https://mainnet.base.org  # use your own Alchemy/Infura/QuickNode URL; wss:// preferred
+market_address: ""                 # REQUIRED — run find_kash_markets.py to get one
+outcome_index: 0                   # which outcome to accumulate (0-based)
+
+# ── Sizing / cadence ──────────────────────────────────────────────
+order_amount_usdc: 10              # USDC bought per slice
+total_budget_usdc: 100             # stop once cumulative fills reach this
+interval_seconds: 300              # seconds between slices (5 min)
+max_slippage_bps: 100              # 100 = 1%
+max_outcome_price: 1               # skip a slice if post-trade outcome price (0–1) would exceed this
+
+# ── Signing ───────────────────────────────────────────────────────
+signer_key_env: KASH_TRADER_PK     # NAME of the env var holding the EOA private key

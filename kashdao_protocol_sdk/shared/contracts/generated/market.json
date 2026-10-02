@@ -20,6 +20,25 @@
   },
   {
     "type": "function",
+    "name": "burnTerminalDust",
+    "inputs": [
+      {
+        "name": "outcome",
+        "type": "uint8",
+        "internalType": "uint8"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "tokensBurned",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "buyExactAssetsIn",
     "inputs": [
       {
@@ -817,6 +836,25 @@
   },
   {
     "type": "function",
+    "name": "sellFrozenFullBasketForVault",
+    "inputs": [
+      {
+        "name": "minAssetsOutUsdc",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "assetsOutUsdc",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "state",
     "inputs": [],
     "outputs": [
@@ -904,6 +942,19 @@
       }
     ],
     "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "vaultLifecycleVersion",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint8",
+        "internalType": "uint8"
+      }
+    ],
+    "stateMutability": "pure"
   },
   {
     "type": "function",
@@ -1412,6 +1463,37 @@
     "anonymous": false
   },
   {
+    "type": "event",
+    "name": "TerminalDustBurned",
+    "inputs": [
+      {
+        "name": "holder",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "outcome",
+        "type": "uint8",
+        "indexed": true,
+        "internalType": "uint8"
+      },
+      {
+        "name": "tokensBurned",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "terminalState",
+        "type": "uint8",
+        "indexed": false,
+        "internalType": "enum Market.State"
+      }
+    ],
+    "anonymous": false
+  },
+  {
     "type": "error",
     "name": "CancelDustNotSettled",
     "inputs": []
@@ -1428,12 +1510,22 @@
   },
   {
     "type": "error",
+    "name": "DustHasValue",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "EmptyWinningMask",
     "inputs": []
   },
   {
     "type": "error",
     "name": "ExceedsSupply",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "FinalWinningSupply",
     "inputs": []
   },
   {

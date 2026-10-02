@@ -31,6 +31,10 @@ CI runs:
 
 - `python scripts/sync-abis.py --check` — confirms vendored ABIs match
   `packages/protocol-sdk/src/shared/contracts/generated/` (drift gate).
+- `python scripts/sync-solana-vendor.py --check` — confirms the vendored
+  `kash_market` IDL, the curve reference corpus and
+  `SOLANA_PROGRAM_IDENTITIES` match `packages/program-idls`,
+  `packages/pythag-math` and `packages/constants` (drift gate).
 - `ruff check kashdao_protocol_sdk tests`
 - `ruff format --check kashdao_protocol_sdk tests`
 - `mypy kashdao_protocol_sdk`
@@ -70,9 +74,10 @@ What the script does:
 5. Drops monorepo-only test files (`*.private.test.py`).
 6. Strips monorepo-only scripts that have no meaning in the mirror tree:
    `scripts/sync-to-public-mirror.ts` (the mirror has no monorepo to
-   read from) and `scripts/sync-abis.py` (vendors ABIs from a monorepo
+   read from), `scripts/sync-abis.py` (vendors ABIs from a monorepo
    path, `packages/protocol-sdk/src/shared/contracts/generated/`, that
-   only exists inside this monorepo).
+   only exists inside this monorepo) and `scripts/sync-solana-vendor.py`
+   (drift-checks the Solana vendored files against monorepo packages).
 7. Commits with message `release: v<version>` and tags `v<version>`.
 8. Pushes `main` + the tag to the mirror.
 
@@ -126,10 +131,20 @@ then fire on the first tag pushed by a subsequent release.
 
 ### 4. Publish to PyPI
 
-**Preferred**: the public mirror's `publish-pypi.yml` workflow fires on
-tag push (step 3 already pushed `v<version>`) and uses OIDC trusted
-publishing — no API token in any repo. Watch the action; once green,
-the package is on PyPI.
+**Preferred**: the public mirror's `publish-pypi.yml` workflow, which is
+**manual dispatch only** — a tag push never publishes. Dispatch it on
+`main` with the version you intend to publish; it builds from the
+checked-out ref, refuses to upload unless the built wheel's version
+matches, and uses OIDC trusted publishing — no API token in any repo:
+
+```sh
+gh workflow run publish-pypi.yml --repo KashDAO/protocol-sdk-python \
+  --ref main -f version=<version>
+```
+
+Watch the run; once green, the package is on PyPI. The wheel carries
+the `[solana]` extra's metadata, so `pip install
+'kashdao-protocol-sdk[solana]'` works from the same artifact.
 
 **Fallback (manual)**: from the monorepo, dry-run first:
 

@@ -10,6 +10,71 @@ breaking changes are explicitly called out in the entry.
 
 ## [Unreleased]
 
+## [0.2.0b1] — 2026-10-02
+
+### Added
+
+- **Solana — `kashdao_protocol_sdk.solana`.** The Kash market program on
+  Solana, mirroring `@kashdao/protocol-sdk/solana` (TypeScript) with
+  `snake_case` names. Installed through a new optional extra,
+  `pip install 'kashdao-protocol-sdk[solana]'`, which adds `solders` (0.28) only;
+  an EVM-only install gains no dependency and `import kashdao_protocol_sdk`
+  never loads the Solana half.
+  - `create_solana_client(rpc_url=... | connection=..., cluster=...)`:
+    `mainnet-beta` by default (program
+    `Jr8Bd8efPfNYHW65vZrVzeLbYkzy1oo3QB3i8cYdDcy`, USDC
+    `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`), `devnet`, or a
+    `CustomSolanaDeployment`. Instructions always name the cluster's
+    program id, never the IDL's embedded canonical id.
+  - Reads: `markets.get`, `account.position` / `positions` /
+    `usdc_balance`, `protocol.config` / `template` / `templates`.
+  - Exact quotes: `markets.quote_buy` / `quote_sell` / `quote_redeem`,
+    computed by an integer port of the program's curve that matches the
+    protocol's Python reference-model corpus vector for vector (372
+    vectors) and the TS SDK's mainnet quote vectors. Sells use each
+    market's own `sell_fee_bps`.
+  - Writes, as build → simulate → send or one call: `open_position`,
+    `buy`, `sell`, `redeem`, `redeem_cancelled`, `close_position`. Every
+    buy, sell and redeem requires a slippage bound — an explicit floor or
+    `max_slippage_bps` (the Base clients' option name). Buys and sells of
+    a paused program, a non-active, frozen or (buys only) halted market
+    are refused before signing with the program's error name; collateral
+    is verified (its PDA, its existence, its USDC mint).
+  - Send safety: the signature is computed from the signed transaction
+    before it is sent and carried by every later error. Only a JSON-RPC
+    answer that proves the transaction was never forwarded is a retryable
+    `TX_SEND_FAILED`: -32003, -32602, or a -32002 preflight whose
+    `data.err` is `BlockhashNotFound`. Any other -32002 is a preflight
+    revert decoded from `data.err` (even with empty logs), and
+    `data.err == "AlreadyProcessed"` is treated as LANDED and confirmed.
+    Every other outcome — timeout, reset, any HTTP error status including
+    429, unreadable body, any other JSON-RPC code (-32603, -32005, vendor)
+    — and an unreadable confirmation raises
+    `KashTransactionOutcomeUnknownError` (`WAIT_RECEIPT_FAILED`, not
+    retryable, `.signature`). A blockhash is only declared expired
+    (`KashTransactionExpiredError`, `TX_EXPIRED`, retryable, `.signature`)
+    when `getEpochInfo` reports the block height past
+    `last_valid_block_height` and a status read from a node at or after
+    that slot finds nothing. The confirm loop backs off through transient
+    429/5xx/timeouts within a `confirm_timeout_seconds` budget.
+  - Signers: `keypair_signer(solders Keypair)`, or any `SolanaSigner`.
+  - `SolanaRpcConnection`: plain Solana JSON-RPC over `httpx`; any
+    `SolanaConnection` implementation can be supplied instead.
+  - PDA derivations (`kash_market_pdas`) and IDL-driven instruction
+    builders (`buy_instruction`, …) are public.
+- `KashValidationError` (code `VALIDATION_FAILED`), with `field`,
+  `constraint` and `program_error`, and the Solana error codes
+  `ACCOUNT_NOT_FOUND`, `ACCOUNT_OWNER_MISMATCH`, `ACCOUNT_READ_FAILED`,
+  `SIMULATION_REQUEST_FAILED`, `TX_REVERTED` and `TX_EXPIRED`.
+
+### Changed
+
+- The version docstring now states the policy RELEASING.md already
+  documents: this package versions independently of the TypeScript SDK.
+
+Base support (EOA and smart-account modes, chains 8453 and 84532) is
+unchanged.
+
 ## [0.1.0b2] — 2026-06-18
 
 ### Added

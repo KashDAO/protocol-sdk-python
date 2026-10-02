@@ -1,11 +1,16 @@
 """Hummingbot reference strategy — AMM arbitrage between Kash and Uniswap.
 
-This is the working strategy file referenced by ``HUMMINGBOT_INTEGRATION.md``.
-It demonstrates the canonical pattern for using ``kashdao-protocol-sdk``
-inside a Hummingbot ``ScriptStrategyBase``: keep a single
-``create_eoa_client`` instance for the strategy's lifetime, drive trades
-through it on each tick, and never let Kash-specific code leak out of
-the SDK boundary.
+> For a COMPLETE, runnable, mainnet-default strategy, use
+> ``kash_accumulator.py`` instead — it is import-validated against the
+> current Hummingbot V2 API. THIS file is an advanced SKELETON for the
+> cross-venue arbitrage pattern: the SDK integration shape is real, but
+> the Uniswap leg and profitability logic are stubbed, so it does not
+> run as-is.
+
+It demonstrates using ``kashdao-protocol-sdk`` inside a Hummingbot V2
+strategy (``StrategyV2Base``): keep a single ``create_eoa_client``
+instance for the strategy's lifetime, drive trades through it on each
+tick, and never let Kash-specific code leak out of the SDK boundary.
 
 Strategy logic
 --------------
@@ -30,7 +35,7 @@ Required env
   market for spending (see ``02_one_line_trade.py`` for the approval
   flow if needed).
 - ``KASH_MARKET_ADDRESS`` — the Kash market contract address.
-- ``KASH_BASE_SEPOLIA_RPC`` (or ``BASE_SEPOLIA_RPC``) — chain RPC URL.
+- ``KASH_BASE_RPC`` (or ``BASE_RPC``) — Base chain RPC URL (mainnet default).
 - ``KASH_OUTCOME_INDEX`` — outcome to arb (default ``0``).
 
 How to run
@@ -44,7 +49,7 @@ With Hummingbot installed::
     > start --script kash_amm_arb
 
 For a standalone smoke-run that exercises the Kash leg only (without
-Hummingbot's ``ScriptStrategyBase`` machinery), see
+Hummingbot's ``StrategyV2Base`` machinery), see
 ``examples/eoa/02_one_line_trade.py``.
 """
 
@@ -71,9 +76,9 @@ from kashdao_protocol_sdk import (
 # importable in standalone Python (e.g. for ``ruff check`` /
 # ``pytest --collect-only``).
 try:
-    from hummingbot.strategy.script_strategy_base import ScriptStrategyBase
+    from hummingbot.strategy.strategy_v2_base import StrategyV2Base
 except ImportError:  # pragma: no cover — only when run outside Hummingbot
-    ScriptStrategyBase = object  # type: ignore[misc, assignment]
+    StrategyV2Base = object  # type: ignore[misc, assignment]
 
 _LOG = logging.getLogger(__name__)
 _TICK_INTERVAL_S = 5.0
@@ -88,7 +93,7 @@ def _env(name: str, *, default: str | None = None, required: bool = False) -> st
     return value or ""
 
 
-class KashAmmArbStrategy(ScriptStrategyBase):  # type: ignore[misc, valid-type]
+class KashAmmArbStrategy(StrategyV2Base):  # type: ignore[misc, valid-type]
     """Arbitrage outcome-token prices between Kash and Uniswap.
 
     The strategy maintains one Kash client for its lifetime. Each
@@ -107,8 +112,8 @@ class KashAmmArbStrategy(ScriptStrategyBase):  # type: ignore[misc, valid-type]
 
         market = _env("KASH_MARKET_ADDRESS", required=True)
         rpc = _env(
-            "KASH_BASE_SEPOLIA_RPC",
-            default=_env("BASE_SEPOLIA_RPC", default="https://sepolia.base.org"),
+            "KASH_BASE_RPC",
+            default=_env("BASE_RPC", default="https://mainnet.base.org"),
         )
         pk = _env("KASH_TRADER_PK", required=True)
         outcome = int(_env("KASH_OUTCOME_INDEX", default="0"))
@@ -119,7 +124,7 @@ class KashAmmArbStrategy(ScriptStrategyBase):  # type: ignore[misc, valid-type]
         self._signer = viem_account_eoa_signer(account)
         self._owner = account.address
         self._kash = create_eoa_client(
-            chain_id=84532,
+            chain_id=8453,  # Base mainnet (use 84532 for Sepolia)
             rpc=rpc,
             signer=self._signer,
         )

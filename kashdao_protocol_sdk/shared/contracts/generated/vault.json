@@ -51,6 +51,25 @@
   },
   {
     "type": "function",
+    "name": "allocationPrincipalUsdc",
+    "inputs": [
+      {
+        "name": "m",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "allowance",
     "inputs": [
       {
@@ -488,6 +507,30 @@
   },
   {
     "type": "function",
+    "name": "deallocateFrozenFull",
+    "inputs": [
+      {
+        "name": "m",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "minAssetsOutUsdc",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "assetsOutUsdc",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "decimals",
     "inputs": [],
     "outputs": [
@@ -747,7 +790,7 @@
         "internalType": "uint256"
       }
     ],
-    "stateMutability": "pure"
+    "stateMutability": "view"
   },
   {
     "type": "function",
@@ -792,7 +835,7 @@
         "internalType": "uint256"
       }
     ],
-    "stateMutability": "pure"
+    "stateMutability": "view"
   },
   {
     "type": "function",
@@ -896,6 +939,19 @@
         "name": "",
         "type": "string",
         "internalType": "string"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "nextAllocationAt",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint40",
+        "internalType": "uint40"
       }
     ],
     "stateMutability": "view"
@@ -1861,6 +1917,31 @@
   },
   {
     "type": "event",
+    "name": "AllocationBatchExecuted",
+    "inputs": [
+      {
+        "name": "assetsUsdc",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "marketCount",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "nextAllocationAt",
+        "type": "uint40",
+        "indexed": false,
+        "internalType": "uint40"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
     "name": "Approval",
     "inputs": [
       {
@@ -2442,12 +2523,39 @@
   },
   {
     "type": "error",
+    "name": "ActiveMarketExposure",
+    "inputs": [
+      {
+        "name": "market",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
     "name": "AddressEmptyCode",
     "inputs": [
       {
         "name": "target",
         "type": "address",
         "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "AllocationBudgetExceeded",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "AllocationCooldownActive",
+    "inputs": [
+      {
+        "name": "nextAllocationAt",
+        "type": "uint40",
+        "internalType": "uint40"
       }
     ]
   },
@@ -2484,6 +2592,11 @@
   {
     "type": "error",
     "name": "DeadlinePassed",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "DeallocNotAllowedOnFallback",
     "inputs": []
   },
   {
@@ -2605,6 +2718,11 @@
   },
   {
     "type": "error",
+    "name": "FeesMustBeZero",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "IdleBufferViolated",
     "inputs": []
   },
@@ -2620,12 +2738,22 @@
   },
   {
     "type": "error",
+    "name": "InvalidAllocationCount",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "InvalidBps",
     "inputs": []
   },
   {
     "type": "error",
     "name": "InvalidInitialization",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "LiveDeallocationDisabled",
     "inputs": []
   },
   {
@@ -2640,12 +2768,22 @@
   },
   {
     "type": "error",
+    "name": "MarketNotFrozen",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "MarketNotRegistered",
     "inputs": []
   },
   {
     "type": "error",
     "name": "MarketNotResolved",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "MarketNotSingleWinner",
     "inputs": []
   },
   {
@@ -2685,6 +2823,11 @@
   },
   {
     "type": "error",
+    "name": "OutstandingRedemptionOrTreasuryLiability",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "OwnableInvalidOwner",
     "inputs": [
       {
@@ -2704,6 +2847,11 @@
         "internalType": "address"
       }
     ]
+  },
+  {
+    "type": "error",
+    "name": "PositionAlreadyTracked",
+    "inputs": []
   },
   {
     "type": "error",
@@ -2728,6 +2876,16 @@
   },
   {
     "type": "error",
+    "name": "TooManyOutcomeLegs",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "TooManyTrackedMarkets",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "UUPSUnauthorizedCallContext",
     "inputs": []
   },
@@ -2739,6 +2897,22 @@
         "name": "slot",
         "type": "bytes32",
         "internalType": "bytes32"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "UnsupportedMarketLifecycle",
+    "inputs": [
+      {
+        "name": "market",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "version",
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ]
   },

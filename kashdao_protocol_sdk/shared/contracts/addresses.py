@@ -102,16 +102,35 @@ class ProtocolAddresses:
 # Registry
 # ---------------------------------------------------------------------------
 
+# AMM V1 protocol deployment (AMM 450b8f2, tag sepolia-deploy-20260810).
+#
+# Source of truth: packages/protocol-config/src/networks.ts (chain 84532),
+# mirrored by packages/protocol-sdk/src/shared/contracts/addresses.ts. All
+# three are separate registries of the same fact and MUST move together — a
+# mismatch routes reads and writes at different protocols.
+#
+# That is not hypothetical: this block was left on the pre-V1 deploy when the
+# other two were updated, so anything resolving addresses through the Python
+# SDK was pointed at a protocol nobody trades on any more. The superseded
+# contracts all still exist and still answer calls, so nothing raised — the
+# old faucet token in particular reports healthy balances for accounts that
+# hold nothing the live markets can settle. Note there is NO automated drift
+# gate covering this file: the TS drift test
+# (packages/protocol-sdk/tests/unit/addresses.test.ts) compares the TS mirror
+# against protocol-config only, so this registry is the one that rots quietly.
+#
+# Retired deployments are recorded in packages/protocol-config/src/
+# deployment-history.ts (RETIRED_DEPLOYMENTS), not in comments here.
 BASE_SEPOLIA: Final[ProtocolAddresses] = ProtocolAddresses(
     chain_id=84532,
     name="Base Sepolia",
     is_testnet=True,
-    factory="0x4d3F803222316bFa1860788F2A80Bce25a404e7F",
-    usdc="0x1F7268be50CfD7E2fF86b806E256B498C0db3A04",
-    oracle="0xE068f310B70F9C6c7DCE081858E5354724dc936a",
-    vault="0xa45Be09558b35ED35fC18371bFc7604bc2D930F5",
-    tokens1155="0x561F73fCE117d60b057864F93fd92C48aA54928e",
-    param_registry="0x811eee7C0F996F9BA2EfC2CAcA0368eF86e69fC9",
+    factory="0x6aba1eB2B68646930D6B5E2EBA3261bAB298D444",
+    usdc="0x29a8295426F1c832aC0e92deFdB4B69d55796673",
+    oracle="0x53D78492c64242C80603cc0636eA972e94c93a07",
+    vault="0x5f4E6485768c4DC507bE1fE1045C1871F5310348",
+    tokens1155="0xfd60BbcCcE4a5955b797ea4F30D1637fAf8e4e83",
+    param_registry="0x12F3FF136A41fe18aFB345b56f54813B122b7391",
     smart_account=_DEFAULT_SMART_ACCOUNT,
 )
 
@@ -119,8 +138,9 @@ BASE_MAINNET: Final[ProtocolAddresses] = ProtocolAddresses(
     chain_id=8453,
     name="Base",
     is_testnet=False,
-    # Base mainnet launch deployment. Mirrors the TS registry
-    # (src/shared/contracts/addresses.ts, chain 8453).
+    # AMM V1 protocol deployment (cite as AMM commit 64994f8 — see
+    # networks.ts for why the deploy predates that commit). Mirrors the TS
+    # registry (src/shared/contracts/addresses.ts, chain 8453).
     factory="0x5aC139604CeAb5fcf8Af6f8a85c337adAd964087",
     usdc="0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
     oracle="0x16A5A01Dad652681F7b3c3C41A35905C57347399",

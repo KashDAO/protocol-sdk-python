@@ -128,6 +128,9 @@ from kashdao_protocol_sdk.shared.errors import (
     KashProtocolError,
     KashSignerError,
     KashSimulationRevertedError,
+    KashTransactionExpiredError,
+    KashTransactionOutcomeUnknownError,
+    KashValidationError,
     throw_if_aborted,
     to_kash_aborted,
 )
@@ -316,6 +319,9 @@ __all__ = [
     "KashProtocolError",
     "KashSignerError",
     "KashSimulationRevertedError",
+    "KashTransactionExpiredError",
+    "KashTransactionOutcomeUnknownError",
+    "KashValidationError",
     # Shared — trade input + market types
     "BuildApproveParams",
     "BuildBuyParams",

@@ -195,9 +195,9 @@ class ErrorCode:
 
     # -- Submission ---------------------------------------------------------
     TX_SEND_FAILED: Final = "TX_SEND_FAILED"
-    """EOA ``eth_sendRawTransaction`` failed."""
+    """EOA ``eth_sendRawTransaction`` failed. Solana: the RPC definitely REFUSED the send (an error object or a 4xx) — safe to rebuild and resend."""
     WAIT_RECEIPT_FAILED: Final = "WAIT_RECEIPT_FAILED"
-    """Wait for receipt timed out / failed (EOA path). Retryable."""
+    """Wait for receipt timed out / failed (EOA path). Solana: the transaction MAY have landed (send timed out / 5xx / unreadable, or its confirmation could not be read) — NOT retryable; look up ``context['signature']`` first."""
 
     # -- Watch --------------------------------------------------------------
     WATCH_HANDLER_FAILED: Final = "WATCH_HANDLER_FAILED"
@@ -208,6 +208,22 @@ class ErrorCode:
     """Watcher dropped a log because identifying / args fields were missing."""
     LOG_DECODE_FAILED: Final = "LOG_DECODE_FAILED"
     """Watcher dropped a log because ABI decoding raised."""
+
+    # -- Solana -------------------------------------------------------------
+    VALIDATION_FAILED: Final = "VALIDATION_FAILED"
+    """:class:`KashValidationError`: an argument, account or quote failed a program rule. ``context['field']`` names it."""
+    ACCOUNT_NOT_FOUND: Final = "ACCOUNT_NOT_FOUND"
+    """A required account (market, config, template, position) does not exist at its derived address."""
+    ACCOUNT_OWNER_MISMATCH: Final = "ACCOUNT_OWNER_MISMATCH"
+    """An account exists but is not owned by the program it was read for (wrong cluster or program id)."""
+    ACCOUNT_READ_FAILED: Final = "ACCOUNT_READ_FAILED"
+    """An RPC read (``getMultipleAccounts``) failed. Retryable."""
+    SIMULATION_REQUEST_FAILED: Final = "SIMULATION_REQUEST_FAILED"
+    """The RPC could not run a ``simulateTransaction`` request (a program refusal is a result, not this). Retryable."""
+    TX_REVERTED: Final = "TX_REVERTED"
+    """The transaction landed and FAILED on chain. ``context['program_error']`` names the program error when decodable."""
+    TX_EXPIRED: Final = "TX_EXPIRED"
+    """The blockhash expired and a final status check found no trace of the signature: it did not land. Rebuild and resend. Retryable."""
 
 
 __all__ = ["ErrorCode"]

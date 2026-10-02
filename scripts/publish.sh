@@ -140,6 +140,9 @@ pytest -m 'not integration and not e2e and not parity' -ra --strict-markers
 echo "  · ABI drift check"
 "$PY" scripts/sync-abis.py --check
 
+echo "  · Solana vendor drift check (IDL, curve corpus, program identities)"
+"$PY" scripts/sync-solana-vendor.py --check
+
 echo "  · build wheel + sdist"
 rm -rf dist build
 "$PY" -m build

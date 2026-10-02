@@ -42,6 +42,7 @@ EXAMPLES_DIR = Path(__file__).parent.parent.parent / "examples"
 # time that requires runtime state (env vars, anvil, etc.).
 SKIP = {
     "hummingbot/amm_arb_kash_uniswap.py",  # hummingbot runtime not vendored
+    "hummingbot/kash_accumulator.py",  # hummingbot runtime not vendored
     "local-anvil/01_quickstart.py",  # requires KASH_* env at import? safer to skip
 }
 

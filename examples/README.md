@@ -9,6 +9,7 @@ and run.
 
 | Subdir           | Audience                                                                          |
 | ---------------- | --------------------------------------------------------------------------------- |
+| `solana/`        | Solana mainnet-beta (where new markets launch); needs the `[solana]` extra        |
 | `eoa/`           | Vanilla EOA mode (Hummingbot, ad-hoc bots, anyone with their own EIP-1559 signer) |
 | `smart_account/` | ERC-4337 v0.7 mode (Privy, Coinbase Smart Wallet, AA stacks)                      |
 
@@ -19,6 +20,9 @@ canonical Hummingbot strategy walk-through;
 
 | Example                              | What it shows                                                                                            |
 | ------------------------------------ | -------------------------------------------------------------------------------------------------------- |
+| `solana/01_read_and_quote.py`        | Solana: read the program config and a market, print an exact buy quote. No signer, no funds.             |
+| `solana/02_buy_and_sell.py`          | Solana: buy 1 USDC then sell it back with `max_slippage_bps`. Gated behind `--confirm`.                  |
+| `solana/03_redeem_and_close.py`      | Solana: build -> simulate -> send a redeem, then close the empty position. Gated behind `--confirm`.     |
 | `eoa/01_quickstart.py`               | Construct EOA client, read market state + a non-binding quote.                                           |
 | `eoa/02_one_line_trade.py`           | All-in-one buy via `client.trades.send.buy(...)`. Gated behind `--confirm`.                              |
 | `eoa/03_error_handling.py`           | Catching the typed `KashProtocolError` hierarchy; deliberately triggers a simulation revert.             |

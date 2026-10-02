@@ -2,10 +2,12 @@
 
 Hatchling reads this via `[tool.hatch.version]` in `pyproject.toml`.
 
-Version policy: lockstep with `@kashdao/protocol-sdk` while we are in 0.x.
-`0.1.0b2` adds Base mainnet (8453) support now that the Kash protocol is
-deployed there. `0.1.0` (GA) remains gated on at least one external
-integrator running on mainnet for >= 30 days.
+Version policy: versioned independently of `@kashdao/protocol-sdk`
+(TypeScript), as RELEASING.md states. `0.2.0b1` adds the Solana client
+(`kashdao_protocol_sdk.solana`, installed with the `[solana]` extra),
+mainnet-beta by default, alongside the unchanged Base support. `0.x` minor
+versions may carry breaking changes; `1.0.0` (GA) remains gated on at least
+one external integrator running on mainnet for >= 30 days.
 """
 
-__version__ = "0.1.0b2"
+__version__ = "0.2.0b1"

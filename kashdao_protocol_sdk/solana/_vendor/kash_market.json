@@ -1,0 +1,2914 @@
+{
+  "address": "4WFoPLragac369ctiiJMoSkrd2y9WL4LGH4vuX9hWs1K",
+  "metadata": {
+    "name": "kash_market",
+    "version": "0.1.0",
+    "spec": "0.1.0"
+  },
+  "instructions": [
+    {
+      "name": "accept_admin",
+      "discriminator": [112, 42, 45, 90, 116, 181, 13, 170],
+      "accounts": [
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 110, 102, 105, 103]
+              }
+            ]
+          }
+        },
+        {
+          "name": "pending_admin",
+          "signer": true
+        },
+        {
+          "name": "event_authority"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "add_template",
+      "discriminator": [122, 237, 121, 173, 11, 15, 113, 122],
+      "accounts": [
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 110, 102, 105, 103]
+              }
+            ]
+          }
+        },
+        {
+          "name": "admin",
+          "signer": true
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "template",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [116, 101, 109, 112, 108, 97, 116, 101]
+              },
+              {
+                "kind": "account",
+                "path": "config.template_count",
+                "account": "Config"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "event_authority"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": {
+              "name": "TemplateParams"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "buy",
+      "discriminator": [102, 6, 61, 18, 1, 218, 235, 234],
+      "accounts": [
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 110, 102, 105, 103]
+              }
+            ]
+          }
+        },
+        {
+          "name": "market",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 97, 114, 107, 101, 116]
+              },
+              {
+                "kind": "arg",
+                "path": "market_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "collateral",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 108, 108, 97, 116, 101, 114, 97, 108]
+              },
+              {
+                "kind": "arg",
+                "path": "market_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "trader",
+          "signer": true
+        },
+        {
+          "name": "trader_ata",
+          "writable": true
+        },
+        {
+          "name": "receiver_position",
+          "docs": ["contract 3.11 step 1b pins seeds, owner, discriminator and stored identity."],
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "event_authority"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "market_id",
+          "type": "u64"
+        },
+        {
+          "name": "outcome",
+          "type": "u8"
+        },
+        {
+          "name": "assets_in_usdc",
+          "type": "u64"
+        },
+        {
+          "name": "min_tokens_out_wad",
+          "type": "u128"
+        },
+        {
+          "name": "deadline",
+          "type": "i64"
+        },
+        {
+          "name": "receiver",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "cancel",
+      "discriminator": [232, 219, 223, 41, 219, 236, 220, 190],
+      "accounts": [
+        {
+          "name": "market",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 97, 114, 107, 101, 116]
+              },
+              {
+                "kind": "arg",
+                "path": "market_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "initiator",
+          "signer": true
+        },
+        {
+          "name": "event_authority"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "market_id",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "close_market",
+      "discriminator": [88, 154, 248, 186, 48, 14, 123, 244],
+      "accounts": [
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 110, 102, 105, 103]
+              }
+            ]
+          }
+        },
+        {
+          "name": "market",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 97, 114, 107, 101, 116]
+              },
+              {
+                "kind": "arg",
+                "path": "market_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "collateral",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 108, 108, 97, 116, 101, 114, 97, 108]
+              },
+              {
+                "kind": "arg",
+                "path": "market_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "revenue_token_account",
+          "writable": true
+        },
+        {
+          "name": "rent_payer",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "event_authority"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "market_id",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "close_position",
+      "discriminator": [123, 134, 81, 0, 49, 68, 98, 98],
+      "accounts": [
+        {
+          "name": "market",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 97, 114, 107, 101, 116]
+              },
+              {
+                "kind": "arg",
+                "path": "market_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "signer": true
+        },
+        {
+          "name": "position",
+          "writable": true
+        },
+        {
+          "name": "rent_payer",
+          "writable": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "event_authority"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "market_id",
+          "type": "u64"
+        },
+        {
+          "name": "outcome",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "collect_fees",
+      "discriminator": [164, 152, 207, 99, 30, 186, 19, 182],
+      "accounts": [
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 110, 102, 105, 103]
+              }
+            ]
+          }
+        },
+        {
+          "name": "market",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 97, 114, 107, 101, 116]
+              },
+              {
+                "kind": "arg",
+                "path": "market_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "collateral",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 108, 108, 97, 116, 101, 114, 97, 108]
+              },
+              {
+                "kind": "arg",
+                "path": "market_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "revenue_token_account",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "event_authority"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "market_id",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "create_market",
+      "discriminator": [103, 226, 97, 235, 200, 188, 251, 254],
+      "accounts": [
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 110, 102, 105, 103]
+              }
+            ]
+          }
+        },
+        {
+          "name": "counter",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 117, 110, 116, 101, 114]
+              }
+            ]
+          }
+        },
+        {
+          "name": "template",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [116, 101, 109, 112, 108, 97, 116, 101]
+              },
+              {
+                "kind": "arg",
+                "path": "template_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "creator",
+          "signer": true
+        },
+        {
+          "name": "creator_ata",
+          "writable": true
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "market",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 97, 114, 107, 101, 116]
+              },
+              {
+                "kind": "account",
+                "path": "counter.next_market_id",
+                "account": "MarketCounter"
+              }
+            ]
+          }
+        },
+        {
+          "name": "collateral",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 108, 108, 97, 116, 101, 114, 97, 108]
+              },
+              {
+                "kind": "account",
+                "path": "counter.next_market_id",
+                "account": "MarketCounter"
+              }
+            ]
+          }
+        },
+        {
+          "name": "usdc_mint",
+          "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "event_authority"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "template_id",
+          "type": "u16"
+        },
+        {
+          "name": "n",
+          "type": "u8"
+        },
+        {
+          "name": "resolve_time",
+          "type": "i64"
+        },
+        {
+          "name": "seed_usdc",
+          "type": "u64"
+        },
+        {
+          "name": "metadata_hash",
+          "type": {
+            "array": ["u8", 32]
+          }
+        }
+      ]
+    },
+    {
+      "name": "harvest_genesis",
+      "discriminator": [241, 117, 102, 5, 68, 235, 254, 15],
+      "accounts": [
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 110, 102, 105, 103]
+              }
+            ]
+          }
+        },
+        {
+          "name": "market",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 97, 114, 107, 101, 116]
+              },
+              {
+                "kind": "arg",
+                "path": "market_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "collateral",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 108, 108, 97, 116, 101, 114, 97, 108]
+              },
+              {
+                "kind": "arg",
+                "path": "market_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "revenue_token_account",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "event_authority"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "market_id",
+          "type": "u64"
+        },
+        {
+          "name": "leg_from",
+          "type": "u8"
+        },
+        {
+          "name": "leg_to",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "init_config",
+      "discriminator": [23, 235, 115, 232, 168, 96, 1, 231],
+      "accounts": [
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "upgrade_authority",
+          "signer": true
+        },
+        {
+          "name": "program",
+          "address": "4WFoPLragac369ctiiJMoSkrd2y9WL4LGH4vuX9hWs1K"
+        },
+        {
+          "name": "program_data"
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 110, 102, 105, 103]
+              }
+            ]
+          }
+        },
+        {
+          "name": "counter",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 117, 110, 116, 101, 114]
+              }
+            ]
+          }
+        },
+        {
+          "name": "usdc_mint",
+          "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+        },
+        {
+          "name": "revenue_token_account"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "event_authority"
+        }
+      ],
+      "args": [
+        {
+          "name": "admin",
+          "type": "pubkey"
+        },
+        {
+          "name": "guardian",
+          "type": "pubkey"
+        },
+        {
+          "name": "resolution_authority",
+          "type": "pubkey"
+        },
+        {
+          "name": "default_protocol_fee_bps",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "open_position",
+      "discriminator": [135, 128, 47, 77, 15, 152, 240, 49],
+      "accounts": [
+        {
+          "name": "market",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 97, 114, 107, 101, 116]
+              },
+              {
+                "kind": "arg",
+                "path": "market_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "position",
+          "writable": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "event_authority"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "market_id",
+          "type": "u64"
+        },
+        {
+          "name": "owner",
+          "type": "pubkey"
+        },
+        {
+          "name": "outcome",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "redeem",
+      "discriminator": [184, 12, 86, 149, 70, 196, 97, 225],
+      "accounts": [
+        {
+          "name": "market",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 97, 114, 107, 101, 116]
+              },
+              {
+                "kind": "arg",
+                "path": "market_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "collateral",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 108, 108, 97, 116, 101, 114, 97, 108]
+              },
+              {
+                "kind": "arg",
+                "path": "market_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "signer": true
+        },
+        {
+          "name": "position",
+          "writable": true
+        },
+        {
+          "name": "receiver_ata",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "event_authority"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "market_id",
+          "type": "u64"
+        },
+        {
+          "name": "outcome",
+          "type": "u8"
+        },
+        {
+          "name": "amount_wad",
+          "type": "u128"
+        },
+        {
+          "name": "min_out_usdc",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "redeem_cancelled",
+      "discriminator": [117, 219, 155, 173, 98, 166, 50, 100],
+      "accounts": [
+        {
+          "name": "market",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 97, 114, 107, 101, 116]
+              },
+              {
+                "kind": "arg",
+                "path": "market_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "collateral",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 108, 108, 97, 116, 101, 114, 97, 108]
+              },
+              {
+                "kind": "arg",
+                "path": "market_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "signer": true
+        },
+        {
+          "name": "position",
+          "writable": true
+        },
+        {
+          "name": "receiver_ata",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "event_authority"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "market_id",
+          "type": "u64"
+        },
+        {
+          "name": "outcome",
+          "type": "u8"
+        },
+        {
+          "name": "amount_wad",
+          "type": "u128"
+        },
+        {
+          "name": "min_out_usdc",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "resolve",
+      "discriminator": [246, 150, 236, 206, 108, 63, 58, 10],
+      "accounts": [
+        {
+          "name": "market",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 97, 114, 107, 101, 116]
+              },
+              {
+                "kind": "arg",
+                "path": "market_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "resolution_authority",
+          "signer": true
+        },
+        {
+          "name": "event_authority"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "market_id",
+          "type": "u64"
+        },
+        {
+          "name": "mask",
+          "type": "u128"
+        },
+        {
+          "name": "evidence_hash",
+          "type": {
+            "array": ["u8", 32]
+          }
+        }
+      ]
+    },
+    {
+      "name": "sell",
+      "discriminator": [51, 230, 133, 164, 1, 127, 131, 173],
+      "accounts": [
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 110, 102, 105, 103]
+              }
+            ]
+          }
+        },
+        {
+          "name": "market",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 97, 114, 107, 101, 116]
+              },
+              {
+                "kind": "arg",
+                "path": "market_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "collateral",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 108, 108, 97, 116, 101, 114, 97, 108]
+              },
+              {
+                "kind": "arg",
+                "path": "market_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "signer": true
+        },
+        {
+          "name": "position",
+          "writable": true
+        },
+        {
+          "name": "receiver_ata",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "event_authority"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "market_id",
+          "type": "u64"
+        },
+        {
+          "name": "outcome",
+          "type": "u8"
+        },
+        {
+          "name": "tokens_in_wad",
+          "type": "u128"
+        },
+        {
+          "name": "min_assets_out_usdc",
+          "type": "u64"
+        },
+        {
+          "name": "deadline",
+          "type": "i64"
+        }
+      ]
+    },
+    {
+      "name": "set_config",
+      "discriminator": [108, 158, 154, 175, 212, 98, 52, 66],
+      "accounts": [
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 110, 102, 105, 103]
+              }
+            ]
+          }
+        },
+        {
+          "name": "admin",
+          "signer": true
+        },
+        {
+          "name": "revenue_token_account",
+          "optional": true
+        },
+        {
+          "name": "event_authority"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "update",
+          "type": {
+            "defined": {
+              "name": "ConfigUpdate"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "set_market_halted",
+      "discriminator": [66, 47, 181, 3, 202, 85, 126, 122],
+      "accounts": [
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 110, 102, 105, 103]
+              }
+            ]
+          }
+        },
+        {
+          "name": "market",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 97, 114, 107, 101, 116]
+              },
+              {
+                "kind": "arg",
+                "path": "market_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "signer": true
+        },
+        {
+          "name": "event_authority"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "market_id",
+          "type": "u64"
+        },
+        {
+          "name": "halted",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "set_paused",
+      "discriminator": [91, 60, 125, 192, 176, 225, 166, 218],
+      "accounts": [
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 110, 102, 105, 103]
+              }
+            ]
+          }
+        },
+        {
+          "name": "guardian",
+          "signer": true
+        },
+        {
+          "name": "event_authority"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "paused",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "transfer_admin",
+      "discriminator": [42, 242, 66, 106, 228, 10, 111, 156],
+      "accounts": [
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 110, 102, 105, 103]
+              }
+            ]
+          }
+        },
+        {
+          "name": "admin",
+          "signer": true
+        },
+        {
+          "name": "event_authority"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "new_admin",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "transfer_position",
+      "discriminator": [139, 130, 102, 147, 135, 77, 113, 222],
+      "accounts": [
+        {
+          "name": "market",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 97, 114, 107, 101, 116]
+              },
+              {
+                "kind": "arg",
+                "path": "market_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "signer": true
+        },
+        {
+          "name": "from_position",
+          "writable": true
+        },
+        {
+          "name": "to_position",
+          "writable": true
+        },
+        {
+          "name": "event_authority"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "market_id",
+          "type": "u64"
+        },
+        {
+          "name": "outcome",
+          "type": "u8"
+        },
+        {
+          "name": "to",
+          "type": "pubkey"
+        },
+        {
+          "name": "amount_wad",
+          "type": "u128"
+        }
+      ]
+    },
+    {
+      "name": "update_template",
+      "discriminator": [44, 43, 160, 160, 253, 236, 99, 61],
+      "accounts": [
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 110, 102, 105, 103]
+              }
+            ]
+          }
+        },
+        {
+          "name": "template",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [116, 101, 109, 112, 108, 97, 116, 101]
+              },
+              {
+                "kind": "arg",
+                "path": "template_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "signer": true
+        },
+        {
+          "name": "event_authority"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "template_id",
+          "type": "u16"
+        },
+        {
+          "name": "update",
+          "type": {
+            "defined": {
+              "name": "TemplateUpdate"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Config",
+      "discriminator": [155, 12, 170, 224, 30, 250, 204, 130]
+    },
+    {
+      "name": "Market",
+      "discriminator": [219, 190, 213, 55, 0, 227, 198, 154]
+    },
+    {
+      "name": "MarketCounter",
+      "discriminator": [7, 196, 205, 231, 23, 219, 20, 78]
+    },
+    {
+      "name": "Position",
+      "discriminator": [170, 188, 143, 228, 122, 64, 247, 208]
+    },
+    {
+      "name": "Template",
+      "discriminator": [43, 26, 88, 69, 69, 96, 9, 79]
+    }
+  ],
+  "events": [
+    {
+      "name": "AdminTransferProposed",
+      "discriminator": [203, 168, 175, 51, 239, 104, 20, 85]
+    },
+    {
+      "name": "AdminTransferred",
+      "discriminator": [255, 147, 182, 5, 199, 217, 38, 179]
+    },
+    {
+      "name": "BuyExecuted",
+      "discriminator": [183, 7, 73, 208, 153, 81, 148, 198]
+    },
+    {
+      "name": "ConfigInitialized",
+      "discriminator": [181, 49, 200, 156, 19, 167, 178, 91]
+    },
+    {
+      "name": "ConfigUpdated",
+      "discriminator": [40, 241, 230, 122, 11, 19, 198, 194]
+    },
+    {
+      "name": "FeesCollected",
+      "discriminator": [233, 23, 117, 225, 107, 178, 254, 8]
+    },
+    {
+      "name": "GenesisHarvested",
+      "discriminator": [91, 25, 19, 91, 215, 147, 154, 123]
+    },
+    {
+      "name": "MarketCancelled",
+      "discriminator": [139, 163, 33, 168, 19, 180, 81, 170]
+    },
+    {
+      "name": "MarketClosed",
+      "discriminator": [86, 91, 119, 43, 94, 0, 217, 113]
+    },
+    {
+      "name": "MarketCreated",
+      "discriminator": [88, 184, 130, 231, 226, 84, 6, 58]
+    },
+    {
+      "name": "MarketHaltedSet",
+      "discriminator": [219, 149, 85, 173, 211, 14, 20, 73]
+    },
+    {
+      "name": "MarketResolved",
+      "discriminator": [89, 67, 230, 95, 143, 106, 199, 202]
+    },
+    {
+      "name": "PausedSet",
+      "discriminator": [171, 125, 127, 156, 233, 81, 68, 66]
+    },
+    {
+      "name": "PositionClosed",
+      "discriminator": [157, 163, 227, 228, 13, 97, 138, 121]
+    },
+    {
+      "name": "PositionOpened",
+      "discriminator": [237, 175, 243, 230, 147, 117, 101, 121]
+    },
+    {
+      "name": "PositionTransferred",
+      "discriminator": [20, 4, 69, 199, 156, 57, 177, 14]
+    },
+    {
+      "name": "Redeemed",
+      "discriminator": [14, 29, 183, 71, 31, 165, 107, 38]
+    },
+    {
+      "name": "RedeemedCancelled",
+      "discriminator": [0, 196, 234, 165, 219, 200, 103, 116]
+    },
+    {
+      "name": "SellExecuted",
+      "discriminator": [119, 121, 151, 201, 32, 52, 63, 121]
+    },
+    {
+      "name": "TemplateAdded",
+      "discriminator": [224, 86, 83, 94, 224, 71, 82, 124]
+    },
+    {
+      "name": "TemplateUpdated",
+      "discriminator": [109, 33, 106, 49, 239, 107, 28, 229]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InvalidState"
+    },
+    {
+      "code": 6001,
+      "name": "Paused"
+    },
+    {
+      "code": 6002,
+      "name": "HaltedEntries"
+    },
+    {
+      "code": 6003,
+      "name": "Expired"
+    },
+    {
+      "code": 6004,
+      "name": "CancelNotEligible"
+    },
+    {
+      "code": 6005,
+      "name": "ResolveTooEarly"
+    },
+    {
+      "code": 6006,
+      "name": "UnsupportedLifecycleVersion"
+    },
+    {
+      "code": 6007,
+      "name": "Unauthorized"
+    },
+    {
+      "code": 6008,
+      "name": "NotResolutionAuthority"
+    },
+    {
+      "code": 6009,
+      "name": "NotResolutionAuthorityOrAfterGrace"
+    },
+    {
+      "code": 6010,
+      "name": "NotUpgradeAuthority"
+    },
+    {
+      "code": 6011,
+      "name": "DefaultPubkey"
+    },
+    {
+      "code": 6012,
+      "name": "RolesNotDistinct"
+    },
+    {
+      "code": 6013,
+      "name": "ZeroAmount"
+    },
+    {
+      "code": 6014,
+      "name": "ZeroTokensOut"
+    },
+    {
+      "code": 6015,
+      "name": "ZeroAssetsOut"
+    },
+    {
+      "code": 6016,
+      "name": "SlippageExceeded"
+    },
+    {
+      "code": 6017,
+      "name": "InvalidOutcome"
+    },
+    {
+      "code": 6018,
+      "name": "TooFewOutcomes"
+    },
+    {
+      "code": 6019,
+      "name": "TooManyOutcomes"
+    },
+    {
+      "code": 6020,
+      "name": "OutcomeCountNotAvailable"
+    },
+    {
+      "code": 6021,
+      "name": "InvalidResolveTime"
+    },
+    {
+      "code": 6022,
+      "name": "SeedBelowMinimum"
+    },
+    {
+      "code": 6023,
+      "name": "SeedOverflow"
+    },
+    {
+      "code": 6024,
+      "name": "TemplateNotOffered"
+    },
+    {
+      "code": 6025,
+      "name": "InvalidSellFee"
+    },
+    {
+      "code": 6026,
+      "name": "InvalidMinSeed"
+    },
+    {
+      "code": 6027,
+      "name": "InvalidCancelGrace"
+    },
+    {
+      "code": 6028,
+      "name": "InvalidMaxWinningOutcomes"
+    },
+    {
+      "code": 6029,
+      "name": "AvailableMaxOutOfRange"
+    },
+    {
+      "code": 6030,
+      "name": "FeeBpsTooHigh"
+    },
+    {
+      "code": 6031,
+      "name": "InvalidLegRange"
+    },
+    {
+      "code": 6032,
+      "name": "SelfTransfer"
+    },
+    {
+      "code": 6033,
+      "name": "ProtocolDestination"
+    },
+    {
+      "code": 6034,
+      "name": "InvalidTier"
+    },
+    {
+      "code": 6035,
+      "name": "EmptyWinningMask"
+    },
+    {
+      "code": 6036,
+      "name": "WinningMaskOutOfBounds"
+    },
+    {
+      "code": 6037,
+      "name": "TooManyWinners"
+    },
+    {
+      "code": 6038,
+      "name": "ZeroWinningSupply"
+    },
+    {
+      "code": 6039,
+      "name": "NotWinningOutcome"
+    },
+    {
+      "code": 6040,
+      "name": "FinalWinningSupply"
+    },
+    {
+      "code": 6041,
+      "name": "DustHasValue"
+    },
+    {
+      "code": 6042,
+      "name": "InsufficientBalance"
+    },
+    {
+      "code": 6043,
+      "name": "SupplyCapExceeded"
+    },
+    {
+      "code": 6044,
+      "name": "ReserveBoundExceeded"
+    },
+    {
+      "code": 6045,
+      "name": "ExceedsSupply"
+    },
+    {
+      "code": 6046,
+      "name": "PostBurnAZero"
+    },
+    {
+      "code": 6047,
+      "name": "ZeroDivisor"
+    },
+    {
+      "code": 6048,
+      "name": "ArithmeticOverflow"
+    },
+    {
+      "code": 6049,
+      "name": "InvariantViolation"
+    },
+    {
+      "code": 6050,
+      "name": "SuppliesNotZero"
+    },
+    {
+      "code": 6051,
+      "name": "GenesisUnharvested"
+    },
+    {
+      "code": 6052,
+      "name": "FeesOutstanding"
+    },
+    {
+      "code": 6053,
+      "name": "PositionNotEmpty"
+    },
+    {
+      "code": 6054,
+      "name": "PositionMissing"
+    },
+    {
+      "code": 6055,
+      "name": "RevenueAliasesCollateral"
+    }
+  ],
+  "types": [
+    {
+      "name": "AdminTransferProposed",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "pending_admin",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "AdminTransferred",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "previous_admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "admin",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "BuyExecuted",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "market_id",
+            "type": "u64"
+          },
+          {
+            "name": "trader",
+            "type": "pubkey"
+          },
+          {
+            "name": "receiver",
+            "type": "pubkey"
+          },
+          {
+            "name": "outcome",
+            "type": "u8"
+          },
+          {
+            "name": "assets_in_usdc",
+            "type": "u64"
+          },
+          {
+            "name": "fee_usdc",
+            "type": "u64"
+          },
+          {
+            "name": "tokens_out_wad",
+            "type": "u128"
+          },
+          {
+            "name": "reserve_after_wad",
+            "type": "u128"
+          },
+          {
+            "name": "supply_after_wad",
+            "type": "u128"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Config",
+      "repr": {
+        "kind": "c"
+      },
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "pending_admin",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "guardian",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "revenue_token_account",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "resolution_authority",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "default_protocol_fee_bps",
+            "type": "u16"
+          },
+          {
+            "name": "template_count",
+            "type": "u16"
+          },
+          {
+            "name": "paused",
+            "type": "u8"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "_pad",
+            "type": {
+              "array": ["u8", 2]
+            }
+          },
+          {
+            "name": "reserved",
+            "type": {
+              "array": ["u8", 64]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "ConfigInitialized",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "guardian",
+            "type": "pubkey"
+          },
+          {
+            "name": "resolution_authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "revenue_token_account",
+            "type": "pubkey"
+          },
+          {
+            "name": "usdc_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "default_protocol_fee_bps",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ConfigUpdate",
+      "docs": ["Instruction contract section 3.5: Borsh arm bytes 0, 1, 2, 3."],
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "DefaultFeeBps",
+            "fields": ["u16"]
+          },
+          {
+            "name": "RevenueTokenAccount",
+            "fields": ["pubkey"]
+          },
+          {
+            "name": "Guardian",
+            "fields": ["pubkey"]
+          },
+          {
+            "name": "ResolutionAuthority",
+            "fields": ["pubkey"]
+          }
+        ]
+      }
+    },
+    {
+      "name": "ConfigUpdated",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "arm",
+            "type": "u8"
+          },
+          {
+            "name": "previous",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "next",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "by",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "FeesCollected",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "market_id",
+            "type": "u64"
+          },
+          {
+            "name": "amount_usdc",
+            "type": "u64"
+          },
+          {
+            "name": "revenue_token_account",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "GenesisHarvested",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "market_id",
+            "type": "u64"
+          },
+          {
+            "name": "leg_from",
+            "type": "u8"
+          },
+          {
+            "name": "leg_to",
+            "type": "u8"
+          },
+          {
+            "name": "legs_settled",
+            "type": "u128"
+          },
+          {
+            "name": "assets_out_usdc",
+            "type": "u64"
+          },
+          {
+            "name": "reserve_after_wad",
+            "type": "u128"
+          },
+          {
+            "name": "unharvested_after",
+            "type": "u128"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Market",
+      "serialization": "bytemuck",
+      "repr": {
+        "kind": "c"
+      },
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "lifecycle_version",
+            "type": "u8"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "state",
+            "type": "u8"
+          },
+          {
+            "name": "halted",
+            "type": "u8"
+          },
+          {
+            "name": "num_outcomes",
+            "type": "u8"
+          },
+          {
+            "name": "max_winning_outcomes",
+            "type": "u8"
+          },
+          {
+            "name": "winning_count",
+            "type": "u8"
+          },
+          {
+            "name": "winning_outcome",
+            "type": "u8"
+          },
+          {
+            "name": "template_id",
+            "type": "u16"
+          },
+          {
+            "name": "sell_fee_bps",
+            "type": "u16"
+          },
+          {
+            "name": "protocol_fee_bps",
+            "type": "u16"
+          },
+          {
+            "name": "_pad0",
+            "type": "u16"
+          },
+          {
+            "name": "category_id",
+            "type": "u32"
+          },
+          {
+            "name": "cancel_grace_seconds",
+            "type": "u32"
+          },
+          {
+            "name": "market_id",
+            "type": "u64"
+          },
+          {
+            "name": "creator",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "resolution_authority",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "collateral_account",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "created_at",
+            "type": "i64"
+          },
+          {
+            "name": "freeze_time",
+            "type": "i64"
+          },
+          {
+            "name": "resolve_time",
+            "type": "i64"
+          },
+          {
+            "name": "freeze_observed_at",
+            "type": "i64"
+          },
+          {
+            "name": "cancelled_at",
+            "type": "i64"
+          },
+          {
+            "name": "fees_owed_usdc",
+            "type": "u64"
+          },
+          {
+            "name": "reserve_wad",
+            "type": {
+              "array": ["u8", 16]
+            }
+          },
+          {
+            "name": "A",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "winning_mask",
+            "type": {
+              "array": ["u8", 16]
+            }
+          },
+          {
+            "name": "sum_winning_supply",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "cancel_reserve_wad",
+            "type": {
+              "array": ["u8", 16]
+            }
+          },
+          {
+            "name": "cancel_A",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "genesis_leg_wad",
+            "type": {
+              "array": ["u8", 16]
+            }
+          },
+          {
+            "name": "genesis_unharvested",
+            "type": {
+              "array": ["u8", 16]
+            }
+          },
+          {
+            "name": "cumulative_volume_wad",
+            "type": {
+              "array": ["u8", 16]
+            }
+          },
+          {
+            "name": "metadata_hash",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "evidence_hash",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "rent_payer",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "reserved",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "_pad1",
+            "type": {
+              "array": ["u8", 8]
+            }
+          },
+          {
+            "name": "supply_wad",
+            "type": {
+              "array": [
+                {
+                  "array": ["u8", 16]
+                },
+                100
+              ]
+            }
+          },
+          {
+            "name": "cancel_supply_wad",
+            "type": {
+              "array": [
+                {
+                  "array": ["u8", 16]
+                },
+                100
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "MarketCancelled",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "market_id",
+            "type": "u64"
+          },
+          {
+            "name": "initiator",
+            "type": "pubkey"
+          },
+          {
+            "name": "reserve_at_cancel_wad",
+            "type": "u128"
+          },
+          {
+            "name": "cancel_a",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "cancelled_at",
+            "type": "i64"
+          },
+          {
+            "name": "n",
+            "type": "u8"
+          },
+          {
+            "name": "freeze_observed_at",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MarketClosed",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "market_id",
+            "type": "u64"
+          },
+          {
+            "name": "residual_swept_usdc",
+            "type": "u64"
+          },
+          {
+            "name": "rent_payer",
+            "type": "pubkey"
+          },
+          {
+            "name": "lamports_refunded",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MarketCounter",
+      "repr": {
+        "kind": "c"
+      },
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "next_market_id",
+            "type": "u64"
+          },
+          {
+            "name": "reserved",
+            "type": {
+              "array": ["u8", 32]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "MarketCreated",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "market_id",
+            "type": "u64"
+          },
+          {
+            "name": "template_id",
+            "type": "u16"
+          },
+          {
+            "name": "creator",
+            "type": "pubkey"
+          },
+          {
+            "name": "rent_payer",
+            "type": "pubkey"
+          },
+          {
+            "name": "n",
+            "type": "u8"
+          },
+          {
+            "name": "seed_usdc",
+            "type": "u64"
+          },
+          {
+            "name": "reserve_wad",
+            "type": "u128"
+          },
+          {
+            "name": "freeze_time",
+            "type": "i64"
+          },
+          {
+            "name": "resolve_time",
+            "type": "i64"
+          },
+          {
+            "name": "metadata_hash",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "resolution_authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "protocol_fee_bps",
+            "type": "u16"
+          },
+          {
+            "name": "sell_fee_bps",
+            "type": "u16"
+          },
+          {
+            "name": "lifecycle_version",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MarketHaltedSet",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "market_id",
+            "type": "u64"
+          },
+          {
+            "name": "halted",
+            "type": "bool"
+          },
+          {
+            "name": "by",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MarketResolved",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "market_id",
+            "type": "u64"
+          },
+          {
+            "name": "winning_mask",
+            "type": "u128"
+          },
+          {
+            "name": "winning_count",
+            "type": "u8"
+          },
+          {
+            "name": "winning_outcome",
+            "type": "u8"
+          },
+          {
+            "name": "sum_winning_supply_wad",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "evidence_hash",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "resolver",
+            "type": "pubkey"
+          },
+          {
+            "name": "freeze_observed_at",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PausedSet",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "paused",
+            "type": "bool"
+          },
+          {
+            "name": "by",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Position",
+      "repr": {
+        "kind": "c"
+      },
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "market",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "owner",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "rent_payer",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "balance",
+            "type": {
+              "array": ["u8", 16]
+            }
+          },
+          {
+            "name": "outcome",
+            "type": "u8"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "_pad",
+            "type": {
+              "array": ["u8", 6]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "PositionClosed",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "market_id",
+            "type": "u64"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "outcome",
+            "type": "u8"
+          },
+          {
+            "name": "rent_payer",
+            "type": "pubkey"
+          },
+          {
+            "name": "lamports",
+            "type": "u64"
+          },
+          {
+            "name": "retired_wad",
+            "type": "u128"
+          },
+          {
+            "name": "terminal_state",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PositionOpened",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "market_id",
+            "type": "u64"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "outcome",
+            "type": "u8"
+          },
+          {
+            "name": "rent_payer",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PositionTransferred",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "market_id",
+            "type": "u64"
+          },
+          {
+            "name": "outcome",
+            "type": "u8"
+          },
+          {
+            "name": "from",
+            "type": "pubkey"
+          },
+          {
+            "name": "to",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount_wad",
+            "type": "u128"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Redeemed",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "market_id",
+            "type": "u64"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "receiver_ata",
+            "type": "pubkey"
+          },
+          {
+            "name": "outcome",
+            "type": "u8"
+          },
+          {
+            "name": "tokens_in_wad",
+            "type": "u128"
+          },
+          {
+            "name": "assets_out_usdc",
+            "type": "u64"
+          },
+          {
+            "name": "reserve_after_wad",
+            "type": "u128"
+          },
+          {
+            "name": "final",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RedeemedCancelled",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "market_id",
+            "type": "u64"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "receiver_ata",
+            "type": "pubkey"
+          },
+          {
+            "name": "outcome",
+            "type": "u8"
+          },
+          {
+            "name": "tokens_in_wad",
+            "type": "u128"
+          },
+          {
+            "name": "assets_out_usdc",
+            "type": "u64"
+          },
+          {
+            "name": "reserve_after_wad",
+            "type": "u128"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SellExecuted",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "market_id",
+            "type": "u64"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "receiver_ata",
+            "type": "pubkey"
+          },
+          {
+            "name": "outcome",
+            "type": "u8"
+          },
+          {
+            "name": "tokens_in_wad",
+            "type": "u128"
+          },
+          {
+            "name": "assets_out_usdc",
+            "type": "u64"
+          },
+          {
+            "name": "fee_usdc",
+            "type": "u64"
+          },
+          {
+            "name": "reserve_after_wad",
+            "type": "u128"
+          },
+          {
+            "name": "supply_after_wad",
+            "type": "u128"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Template",
+      "repr": {
+        "kind": "c"
+      },
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": "u16"
+          },
+          {
+            "name": "tier",
+            "type": "u8"
+          },
+          {
+            "name": "max_outcomes",
+            "type": "u8"
+          },
+          {
+            "name": "available_max_outcomes",
+            "type": "u8"
+          },
+          {
+            "name": "max_winning_outcomes",
+            "type": "u8"
+          },
+          {
+            "name": "offered",
+            "type": "bool"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "freeze_lead_seconds",
+            "type": "u32"
+          },
+          {
+            "name": "cancel_grace_seconds",
+            "type": "u32"
+          },
+          {
+            "name": "sell_fee_bps",
+            "type": "u16"
+          },
+          {
+            "name": "_pad0",
+            "type": {
+              "array": ["u8", 6]
+            }
+          },
+          {
+            "name": "min_seed_usdc",
+            "type": "u64"
+          },
+          {
+            "name": "category_id",
+            "type": "u32"
+          },
+          {
+            "name": "_pad1",
+            "type": {
+              "array": ["u8", 4]
+            }
+          },
+          {
+            "name": "reserved",
+            "type": {
+              "array": ["u8", 80]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "TemplateAdded",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": "u16"
+          },
+          {
+            "name": "tier",
+            "type": "u8"
+          },
+          {
+            "name": "freeze_lead_seconds",
+            "type": "u32"
+          },
+          {
+            "name": "cancel_grace_seconds",
+            "type": "u32"
+          },
+          {
+            "name": "sell_fee_bps",
+            "type": "u16"
+          },
+          {
+            "name": "min_seed_usdc",
+            "type": "u64"
+          },
+          {
+            "name": "max_outcomes",
+            "type": "u8"
+          },
+          {
+            "name": "available_max_outcomes",
+            "type": "u8"
+          },
+          {
+            "name": "max_winning_outcomes",
+            "type": "u8"
+          },
+          {
+            "name": "offered",
+            "type": "bool"
+          },
+          {
+            "name": "category_id",
+            "type": "u32"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TemplateParams",
+      "docs": ["Instruction contract section 3.7, in its declared wire order."],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tier",
+            "type": "u8"
+          },
+          {
+            "name": "freeze_lead_seconds",
+            "type": "u32"
+          },
+          {
+            "name": "cancel_grace_seconds",
+            "type": "u32"
+          },
+          {
+            "name": "sell_fee_bps",
+            "type": "u16"
+          },
+          {
+            "name": "min_seed_usdc",
+            "type": "u64"
+          },
+          {
+            "name": "max_outcomes",
+            "type": "u8"
+          },
+          {
+            "name": "available_max_outcomes",
+            "type": "u8"
+          },
+          {
+            "name": "max_winning_outcomes",
+            "type": "u8"
+          },
+          {
+            "name": "offered",
+            "type": "bool"
+          },
+          {
+            "name": "category_id",
+            "type": "u32"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TemplateUpdate",
+      "docs": ["Instruction contract section 3.8: Borsh arm bytes 0, 1."],
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Offered",
+            "fields": ["bool"]
+          },
+          {
+            "name": "AvailableMaxOutcomes",
+            "fields": ["u8"]
+          }
+        ]
+      }
+    },
+    {
+      "name": "TemplateUpdated",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": "u16"
+          },
+          {
+            "name": "arm",
+            "type": "u8"
+          },
+          {
+            "name": "previous",
+            "type": {
+              "array": ["u8", 8]
+            }
+          },
+          {
+            "name": "next",
+            "type": {
+              "array": ["u8", 8]
+            }
+          },
+          {
+            "name": "by",
+            "type": "pubkey"
+          }
+        ]
+      }
+    }
+  ]
+}
