@@ -71,7 +71,9 @@ jobs:
           echo "Version match: $pkg"
 
       - name: Publish to PyPI (OIDC trusted publishing)
-        uses: pypa/gh-action-pypi-publish@76f52bc884231f62b9a034ebfe128415bbaabdfc  # v1.12.4
+        # v1.14.2 bundles twine 7.0.0, which accepts Metadata-Version 2.5.
+        # v1.12.4 (twine 6.1.0) refused it and blocked 0.2.0b1.
+        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33  # v1.14.2
         with:
           packages-dir: dist/
           # Skip-existing covers reruns of an already-published version.

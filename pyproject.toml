@@ -1,5 +1,11 @@
 [build-system]
-requires = ["hatchling>=1.25"]
+# Bounded below 1.32: hatchling 1.32.0 changed its default core metadata to
+# Metadata-Version 2.5, while every release in [1.27, 1.32) emits 2.4. An
+# unbounded backend let a routine release re-stamp the wheel's metadata
+# version underneath us (0.2.0b1's publish was refused by the twine bundled
+# in the publish action). Raise the ceiling deliberately, after confirming
+# the publish workflow's twine accepts what the new backend emits.
+requires = ["hatchling>=1.27,<1.32"]
 build-backend = "hatchling.build"
 
 [project]

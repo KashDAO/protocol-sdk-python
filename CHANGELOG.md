@@ -10,7 +10,22 @@ breaking changes are explicitly called out in the entry.
 
 ## [Unreleased]
 
-## [0.2.0b1] — 2026-10-02
+## [0.2.0b2] — 2026-10-02
+
+0.2.0b1 was tagged but never reached PyPI. This release carries the same
+library code as 0.2.0b1 (everything under 0.2.0b1 below ships here); only
+the packaging changed.
+
+### Fixed
+
+- **Publishing.** The 0.2.0b1 wheel was built by hatchling 1.32, which emits
+  `Metadata-Version: 2.5`, and the twine (6.1.0) bundled in the pinned
+  `pypa/gh-action-pypi-publish` v1.12.4 rejected it as an invalid
+  distribution, so nothing was uploaded. The build backend is now bounded to
+  `hatchling>=1.27,<1.32` (Metadata-Version 2.4, reproducibly), and the
+  publish action is pinned to v1.14.2 (twine 7.0.0, which accepts 2.5).
+
+## [0.2.0b1] — 2026-10-02 (tagged, never published)
 
 ### Added
 

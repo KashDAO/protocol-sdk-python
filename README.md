@@ -15,7 +15,7 @@ Official Python SDK for the [Kash](https://kash.bot) prediction-market protocol 
 > (84532) stay fully supported for markets that live there until they
 > resolve. See [Supported chains](#supported-chains).
 
-> **Status: 0.2.0b1 (beta).** Three clients ship complete:
+> **Status: 0.2.0b2 (beta).** Three clients ship complete:
 >
 > - **Solana** — `create_solana_client`. The Kash market program on
 >   mainnet-beta (default) or devnet; bring your own RPC + keypair.
